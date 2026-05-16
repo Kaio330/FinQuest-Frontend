@@ -37,6 +37,12 @@
   color: #ffffff;
 }
 
+.coin-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .user-level {
   display: flex;
   align-items: center;
