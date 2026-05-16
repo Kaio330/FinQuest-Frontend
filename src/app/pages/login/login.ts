@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { DefautLoginLayout } from '../../components/defaut-login-layout/defaut-login-layout';
+import { DefaultLoginLayout } from '../../components/default-login-layout/default-login-layout';
 
 @Component({
   selector: 'app-login',
   imports: [
-    DefautLoginLayout
+    DefaultLoginLayout
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',
