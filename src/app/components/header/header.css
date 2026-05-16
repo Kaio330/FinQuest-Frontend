@@ -1,0 +1,95 @@
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 40px;
+  background-color: #121521;
+  border-bottom: 1px solid #1f2335;
+}
+
+.header-titles h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.header-titles p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #8b92a5;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.coins-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1f2335;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.user-level {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.level-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.level-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.xp-text {
+  font-size: 10px;
+  color: #8b92a5;
+}
+
+.avatar {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #1f2335;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.level-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background-color: #00d084;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #121521;
+}
