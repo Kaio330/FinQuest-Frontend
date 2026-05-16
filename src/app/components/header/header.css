@@ -30,7 +30,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #1f2335;
+  background-color: transparent;
+  border: 1px solid #1f2335;
   padding: 8px 16px;
   border-radius: 20px;
   font-weight: 600;
@@ -58,12 +59,28 @@
 .level-text {
   font-size: 12px;
   font-weight: 700;
-  color: #ffffff;
+  color: #8b92a5;
+  margin-bottom: 4px;
+}
+
+.progress-bar-container {
+  width: 100px;
+  height: 6px;
+  background-color: #1f2335;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #00d084;
+  border-radius: 4px;
 }
 
 .xp-text {
   font-size: 10px;
-  color: #8b92a5;
+  color: #5b6275;
 }
 
 .avatar {
@@ -88,14 +105,13 @@
   bottom: -4px;
   right: -4px;
   background-color: #00d084;
-  color: #ffffff;
+  color: #121521;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   width: 18px;
   height: 18px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #121521;
 }
