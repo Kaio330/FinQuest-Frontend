@@ -1,5 +1,6 @@
 .sidebar {
   width: 260px;
+  height: 95%;
   background-color: #1a1d2d;
   display: flex;
   flex-direction: column;
@@ -16,6 +17,7 @@
 
 .logo-icon {
   background-color: #00d084;
+  background: linear-gradient(135deg, #34d399, #059669);
   color: #121521;
   font-weight: 800;
   font-size: 20px;
@@ -24,13 +26,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+
+.logo-area {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin: 0 0 10px 0;
 }
 
 .logo-text {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.logo-text span {
+  color: var(--neon-green);
 }
 
 .nav-menu {
