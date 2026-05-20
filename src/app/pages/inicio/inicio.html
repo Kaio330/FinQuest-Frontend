@@ -1,10 +1,76 @@
 <app-dashboard-layout>
   <app-header title="Visão Geral" subtitle="Bem-vindo de volta, Samuel!"></app-header>
 
-  <div class="content-area">
-    <div class="main-column">
+  <div class="page-container">
 
-      <!-- Bonus Mission Banner -->
+    <!-- Stats Row -->
+    <div class="stats-grid">
+
+      <!-- Card 1: XP -->
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-info">
+            <span class="stat-title">XP Total Acumulado</span>
+            <div class="stat-value">2450</div>
+          </div>
+          <div class="stat-icon icon-green-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </div>
+        </div>
+        <div class="stat-footer">
+          <div class="badge badge-green">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+            +350 XP esta semana
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Ofensiva -->
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-info">
+            <span class="stat-title">Ofensiva Atual</span>
+            <div class="stat-value">7 <span class="stat-value-small">Dias</span></div>
+          </div>
+          <div class="stat-icon icon-orange-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff7a00" stroke="#ff7a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+          </div>
+        </div>
+        <div class="stat-footer">
+          <div class="badge badge-orange">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            Faltam 3 dias para bônus
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Aulas -->
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-info">
+            <span class="stat-title">Aulas Concluídas</span>
+            <div class="stat-value">12 <span class="stat-value-small">/ 40</span></div>
+          </div>
+          <div class="stat-icon icon-purple-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+        </div>
+        <div class="stat-footer">
+          <div class="stat-progress-container">
+            <div class="stat-progress-bar">
+              <div class="stat-progress-fill" style="width: 30%;"></div>
+            </div>
+            <div class="stat-progress-text">30% do curso básico</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="content-area">
+      <div class="main-column">
+
+        <!-- Bonus Mission Banner -->
       <section class="bonus-mission">
         <div class="mission-content">
           <div class="mission-icon-wrapper">
@@ -64,5 +130,6 @@
         <button class="btn-outline">Ver Galeria de Troféus</button>
       </div>
     </aside>
-  </div>
+  </div> <!-- Close content-area -->
+</div> <!-- Close page-container -->
 </app-dashboard-layout>

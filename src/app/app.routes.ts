@@ -14,10 +14,7 @@ export const routes: Routes = [
     },
     {
         path: "",
-        component: Login
-    },
-    {
-        path: "Home",
-        component: DashboardComponent
+        redirectTo: "inicio",
+        pathMatch: "full"
     }
 ];
