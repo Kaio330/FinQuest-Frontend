@@ -9,10 +9,11 @@ export const routes: Routes = [
     },
     {
         path: "inicio",
-        component: DashboardComponent
+        component: Inicio
     },
     {
         path: "",
-        component: Login
+        redirectTo: "inicio",
+        pathMatch: "full"
     }
 ];

@@ -1,7 +1,135 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background-color: #1a1e2b;
+  border: 1px solid #2f3446;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-title {
+  color: #8b92a5;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stat-value {
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-value-small {
+  font-size: 16px;
+  color: #5b6275;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-green-box {
+  background-color: rgba(0, 208, 132, 0.1);
+  color: #00d084;
+}
+
+.icon-orange-box {
+  background-color: rgba(255, 122, 0, 0.1);
+  color: #ff7a00;
+}
+
+.icon-purple-box {
+  background-color: rgba(164, 80, 255, 0.1);
+  color: #a450ff;
+}
+
+.stat-footer {
+  display: flex;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-green {
+  background-color: rgba(0, 208, 132, 0.15);
+  color: #00d084;
+}
+
+.badge-orange {
+  background-color: rgba(255, 122, 0, 0.15);
+  color: #ff7a00;
+}
+
+.stat-progress-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #1f2335;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.stat-progress-fill {
+  height: 100%;
+  background-color: #a450ff;
+  border-radius: 3px;
+}
+
+.stat-progress-text {
+  color: #8b92a5;
+  font-size: 12px;
+}
+
 .content-area {
   display: flex;
   gap: 40px;
-  padding: 32px 40px;
 }
 
 .main-column {
