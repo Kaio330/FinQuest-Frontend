@@ -1,0 +1,33 @@
+<app-dashboard-layout>
+  <div class="trilhas-container">
+    <h2 style="color: #fff">Trilhas de Aprendizado</h2>
+
+    <div *ngIf="loading" class="loading">Carregando trilhas...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div class="trilha-list" *ngIf="!loading && !error">
+      <div class="nivel-card" *ngFor="let nivel of niveis">
+        <div class="nivel-header">
+          <h3>Nível {{ nivel.numNivel }}</h3>
+          <span class="xp-badge">{{ nivel.xpMinimo }} XP Mínimo</span>
+        </div>
+
+        <div class="licoes-grid">
+          <div class="licao-card" *ngFor="let licao of nivel.licoes">
+            <div class="licao-icon">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="#4caf50">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <h4>Lição {{ licao.idLicao }}</h4>
+            <p>{{ licao.conteudo }}</p>
+            <div class="licao-footer">
+              <span class="vidas">Vidas: {{ licao.vidasJogador }}</span>
+              <a [routerLink]="['/simulados', licao.idLicao]" class="btn-iniciar">Iniciar Simulado</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-dashboard-layout>

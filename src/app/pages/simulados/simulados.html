@@ -1,0 +1,97 @@
+<app-dashboard-layout>
+  <div class="simulado-container">
+    <div class="header">
+      <a routerLink="/trilhas" class="btn-voltar">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        Voltar para Trilhas
+      </a>
+      <h2>Simulado - Lição {{ licaoId }}</h2>
+    </div>
+
+    <div *ngIf="loading" class="loading">Carregando simulado...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div *ngIf="!loading && !error && questoes.length > 0 && !simuladoFinalizado" class="simulado-content">
+      <div class="progresso">
+        Questão {{ questaoAtual + 1 }} de {{ questoes.length }}
+      </div>
+
+      <div class="questao-card">
+        <h3>{{ questoes[questaoAtual].enunciado }}</h3>
+
+        <div class="alternativas">
+          <button
+            class="alternativa-btn"
+            [class.selecionada]="respostas[questaoAtual] === 'A'"
+            (click)="selecionarAlternativa('A')">
+            <span class="letra">A</span> {{ questoes[questaoAtual].alternativaA }}
+          </button>
+
+          <button
+            class="alternativa-btn"
+            [class.selecionada]="respostas[questaoAtual] === 'B'"
+            (click)="selecionarAlternativa('B')">
+            <span class="letra">B</span> {{ questoes[questaoAtual].alternativaB }}
+          </button>
+
+          <button
+            class="alternativa-btn"
+            [class.selecionada]="respostas[questaoAtual] === 'C'"
+            (click)="selecionarAlternativa('C')">
+            <span class="letra">C</span> {{ questoes[questaoAtual].alternativaC }}
+          </button>
+
+          <button
+            class="alternativa-btn"
+            [class.selecionada]="respostas[questaoAtual] === 'D'"
+            (click)="selecionarAlternativa('D')">
+            <span class="letra">D</span> {{ questoes[questaoAtual].alternativaD }}
+          </button>
+        </div>
+      </div>
+
+      <div class="controles">
+        <button
+          class="btn-controle"
+          [disabled]="questaoAtual === 0"
+          (click)="questaoAnterior()">
+          Anterior
+        </button>
+
+        <button
+          *ngIf="questaoAtual < questoes.length - 1"
+          class="btn-controle principal"
+          [disabled]="!respostas[questaoAtual]"
+          (click)="proximaQuestao()">
+          Próxima
+        </button>
+
+        <button
+          *ngIf="questaoAtual === questoes.length - 1"
+          class="btn-controle sucesso"
+          [disabled]="!respostas[questaoAtual]"
+          (click)="finalizarSimulado()">
+          Finalizar Simulado
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="simuladoFinalizado" class="resultado-container">
+      <div class="resultado-card">
+        <svg viewBox="0 0 24 24" width="64" height="64" fill="#4caf50" class="resultado-icon">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        <h2>Simulado Concluído!</h2>
+        <p class="pontuacao">Você acertou <strong>{{ pontuacao }}</strong> de <strong>{{ questoes.length }}</strong> questões.</p>
+
+        <a routerLink="/trilhas" class="btn-controle principal">Voltar para Trilhas</a>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && !error && questoes.length === 0" class="empty-state">
+      <p>Nenhuma questão encontrada para este simulado.</p>
+    </div>
+  </div>
+</app-dashboard-layout>
