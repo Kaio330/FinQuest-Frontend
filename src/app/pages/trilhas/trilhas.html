@@ -1,6 +1,10 @@
 <app-dashboard-layout>
+  <app-header title="Trilha De Aprendizado" subtitle="Bem-vindo de volta, Samuel!"></app-header>
   <div class="trilhas-container">
-    <h2 style="color: #fff">Trilhas de Aprendizado</h2>
+    <div class="page-header">
+      <h2>Trilhas de Conhecimento</h2>
+      <p>Complete as lições de cada nível para ganhar experiência e moedas.</p>
+    </div>
 
     <div *ngIf="loading" class="loading">Carregando trilhas...</div>
     <div *ngIf="error" class="error">{{ error }}</div>
@@ -8,22 +12,47 @@
     <div class="trilha-list" *ngIf="!loading && !error">
       <div class="nivel-card" *ngFor="let nivel of niveis">
         <div class="nivel-header">
-          <h3>Nível {{ nivel.numNivel }}</h3>
-          <span class="xp-badge">{{ nivel.xpMinimo }} XP Mínimo</span>
+          <div class="nivel-title-group">
+            <div class="nivel-badge">{{ nivel.numNivel }}</div>
+            <h3>{{ nivel.nomeNivel || 'Nível ' + nivel.numNivel }}</h3>
+          </div>
+          <span class="xp-badge">Requer: {{ nivel.xpMinimo }} XP</span>
         </div>
 
         <div class="licoes-grid">
           <div class="licao-card" *ngFor="let licao of nivel.licoes">
-            <div class="licao-icon">
-              <svg viewBox="0 0 24 24" width="32" height="32" fill="#4caf50">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
+            <div class="licao-header">
+              <div class="licao-icon-bg">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2ED573" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </div>
+              <div class="licao-rewards">
+                <span class="reward xp">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                  {{ licao.xpRecompensa || 100 }}
+                </span>
+                <span class="reward coin">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#F1C40F">
+                    <circle cx="12" cy="12" r="10"/>
+                  </svg>
+                  {{ licao.moedaRecompensa || 25 }}
+                </span>
+              </div>
             </div>
-            <h4>Lição {{ licao.idLicao }}</h4>
-            <p>{{ licao.conteudo }}</p>
+
+            <h4>{{ licao.titulo || 'Lição ' + licao.idLicao }}</h4>
+            <p>{{ licao.descricao || licao.conteudo }}</p>
+
             <div class="licao-footer">
-              <span class="vidas">Vidas: {{ licao.vidasJogador }}</span>
-              <a [routerLink]="['/simulados', licao.idLicao]" class="btn-iniciar">Iniciar Simulado</a>
+              <span class="questoes-count">{{ licao.quantidadeQuestoes || 2 }} Questões</span>
+              <a [routerLink]="['/simulados', licao.idLicao]" class="btn-iniciar">
+                Começar
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
             </div>
           </div>
         </div>
