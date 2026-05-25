@@ -13,13 +13,13 @@
       <div class="nivel-card" *ngFor="let nivel of niveis">
         <div class="nivel-header">
           <div class="nivel-title-group">
-            <div class="nivel-badge">{{ nivel.numNivel }}</div>
-            <h3>{{ nivel.nomeNivel || 'Nível ' + nivel.numNivel }}</h3>
+            <div class="nivel-badge">{{ nivel.numeroNivel }}</div>
+            <h3>{{ nivel.titulo }}</h3>
           </div>
-          <span class="xp-badge">Requer: {{ nivel.xpMinimo }} XP</span>
+          <span class="xp-badge" *ngIf="nivel.xpMinimo">Requer: {{ nivel.xpMinimo }} XP</span>
         </div>
 
-        <div class="licoes-grid">
+        <div class="licoes-grid" *ngIf="nivel.licoes && nivel.licoes.length > 0">
           <div class="licao-card" *ngFor="let licao of nivel.licoes">
             <div class="licao-header">
               <div class="licao-icon-bg">
@@ -28,25 +28,25 @@
                 </svg>
               </div>
               <div class="licao-rewards">
-                <span class="reward xp">
+                <span class="reward xp" *ngIf="licao.xpRecompensa">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                  {{ licao.xpRecompensa || 100 }}
+                  {{ licao.xpRecompensa }}
                 </span>
-                <span class="reward coin">
+                <span class="reward coin" *ngIf="licao.moedaRecompensa">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="#F1C40F">
                     <circle cx="12" cy="12" r="10"/>
                   </svg>
-                  {{ licao.moedaRecompensa || 25 }}
+                  {{ licao.moedaRecompensa }}
                 </span>
               </div>
             </div>
 
-            <h4>{{ licao.titulo || 'Lição ' + licao.idLicao }}</h4>
-            <p>{{ licao.descricao || licao.conteudo }}</p>
+            <h4>{{ licao.titulo }}</h4>
+            <p>{{ licao.conteudo }}</p>
 
             <div class="licao-footer">
-              <span class="questoes-count">{{ licao.quantidadeQuestoes || 2 }} Questões</span>
-              <a [routerLink]="['/simulados', licao.idLicao]" class="btn-iniciar">
+              <span class="questoes-count" *ngIf="licao.quantidadeQuestoes">{{ licao.quantidadeQuestoes }} Questões</span>
+              <a [routerLink]="['/simulados', licao.id]" class="btn-iniciar">
                 Começar
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>

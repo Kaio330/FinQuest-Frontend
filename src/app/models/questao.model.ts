@@ -1,12 +1,11 @@
-import { Licao } from './nivel.model';
-
 export interface Questao {
-  idQuestao: number;
+  id: number;
   enunciado: string;
   alternativaA: string;
   alternativaB: string;
-  alternativaC: string;
-  alternativaD: string;
+  alternativaC?: string;
+  alternativaD?: string;
   respostaCorreta: string;
-  licao: Licao;
+  licaoId: number;
+  xpRecompensa: number;
 }
