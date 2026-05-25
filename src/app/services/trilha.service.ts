@@ -12,6 +12,6 @@ export class TrilhaService {
   private apiUrl = `${environment.apiUrl}/api/niveis`;
 
   getTrilhas(): Observable<Nivel[]> {
-    return this.http.get<Nivel[]>(this.apiUrl);
+    return this.http.get<Nivel[]>(`${this.apiUrl}/listar`);
   }
 }

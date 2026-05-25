@@ -30,27 +30,28 @@ export class Trilhas implements OnInit {
         // Fallback to mock data if backend is not running to show the UI
         this.niveis = [
           {
-            numNivel: 1,
+            id: 1,
+            numeroNivel: 1,
             xpMinimo: 0,
             recompensas: 100,
-            nomeNivel: "Introdução à Economia Pessoal",
+            titulo: "Introdução à Economia Pessoal",
             licoes: [
               {
-                idLicao: 1,
-                conteudo: "Aprenda os conceitos básicos...",
-                vidasJogador: 3,
+                id: 1,
+                conteudo: "Aprenda os conceitos básicos de ganhos, gastos e o que significa poupar de verdade.",
+                ordemNoNivel: 1,
+                nivelId: 1,
                 titulo: "O Valor do Dinheiro",
-                descricao: "Aprenda os conceitos básicos de ganhos, gastos e o que significa poupar de verdade.",
                 xpRecompensa: 100,
                 moedaRecompensa: 25,
                 quantidadeQuestoes: 2
               },
               {
-                idLicao: 2,
-                conteudo: "Despesas...",
-                vidasJogador: 3,
+                id: 2,
+                conteudo: "Como aqueles pequenos gastos diários estão a corroer a sua riqueza.",
+                ordemNoNivel: 2,
+                nivelId: 1,
                 titulo: "Despesas Invisíveis",
-                descricao: "Como aqueles pequenos gastos diários estão a corroer a sua riqueza.",
                 xpRecompensa: 150,
                 moedaRecompensa: 30,
                 quantidadeQuestoes: 1

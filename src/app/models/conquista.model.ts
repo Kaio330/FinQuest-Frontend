@@ -1,5 +1,9 @@
 export interface Conquista {
-  nome: string;
+  id: number;
+  titulo: string;
   descricao: string;
-  desbloqueada: boolean;
+  icone?: string;
+  xpRecompensa: number;
+  jogadorId: number;
+  dataObtida: string;
 }
