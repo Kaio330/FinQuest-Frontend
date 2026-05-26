@@ -1,22 +1,196 @@
 <app-dashboard-layout>
-  <div class="conquistas-container">
-    <h2 style="color: #fff">Minhas Conquistas</h2>
+  <div class="p-6 lg:p-8 space-y-8 max-w-6xl mx-auto">
 
-    <div *ngIf="loading" class="loading">Carregando conquistas...</div>
-    <div *ngIf="error" class="error">{{ error }}</div>
-
-    <div class="conquistas-grid" *ngIf="!loading && !error">
-      <div class="conquista-card" *ngFor="let conquista of conquistas">
-        <div class="icon">
-          <svg viewBox="0 0 24 24" width="48" height="48" fill="gold">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-        </div>
-        <h3>{{ conquista.titulo }}</h3>
-        <p>{{ conquista.descricao }}</p>
-        <div class="xp-recompensa">+{{ conquista.xpRecompensa }} XP</div>
-        <span class="status">Desbloqueada</span>
+    <!-- ══════════════════════ CABEÇALHO ══════════════════════ -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="text-2xl lg:text-3xl font-bold text-white tracking-tight">As tuas Conquistas</h1>
+        <p class="text-slate-400 text-sm mt-1">Cada conquista é prova do teu progresso financeiro.</p>
+      </div>
+      <!-- Badge total -->
+      <div class="flex items-center gap-2 bg-slate-800/60 border border-slate-700/50 rounded-2xl px-4 py-2.5 w-fit">
+        <svg class="w-5 h-5 text-yellow-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        <span class="text-white font-semibold text-sm">{{ conquistasDesbloqueadas().length }} / {{ catalogo.length }}</span>
+        <span class="text-slate-400 text-xs">desbloqueadas</span>
       </div>
     </div>
+
+    <!-- ══════════════════════ LOADING ══════════════════════ -->
+    <div *ngIf="loading()" class="flex flex-col items-center justify-center py-20 gap-4">
+      <svg class="w-10 h-10 text-emerald-400 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" stroke-opacity="0.2"/>
+        <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+      </svg>
+      <p class="text-slate-400 text-sm">A carregar conquistas...</p>
+    </div>
+
+    <ng-container *ngIf="!loading()">
+
+      <!-- ══════════════════════ STATS ══════════════════════ -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+        <!-- Desbloqueadas -->
+        <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-white">{{ conquistasDesbloqueadas().length }}</p>
+            <p class="text-slate-400 text-xs">Desbloqueadas</p>
+          </div>
+        </div>
+
+        <!-- XP Ganho -->
+        <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-yellow-500/15 border border-yellow-500/30 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-white">{{ totalXpConquistado() }}</p>
+            <p class="text-slate-400 text-xs">XP de conquistas</p>
+          </div>
+        </div>
+
+        <!-- Progresso -->
+        <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+              <span class="text-slate-400 text-xs">Progresso geral</span>
+            </div>
+            <span class="text-white font-bold text-sm">{{ percentualConcluido() }}%</span>
+          </div>
+          <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+            <div
+              class="h-full bg-gradient-to-r from-purple-500 to-emerald-500 rounded-full transition-all duration-700"
+              [style.width.%]="percentualConcluido()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════ DESBLOQUEADAS ══════════════════════ -->
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
+          <h2 class="text-lg font-bold text-white">Desbloqueadas</h2>
+          <span class="text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-2.5 py-0.5">
+            {{ conquistasDesbloqueadas().length }}
+          </span>
+        </div>
+
+        <!-- Sem conquistas ainda -->
+        <div *ngIf="conquistasDesbloqueadas().length === 0"
+             class="bg-slate-800/40 border border-slate-700/40 rounded-2xl p-10 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-slate-700/60 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+          </div>
+          <p class="text-white font-semibold mb-1">Nenhuma conquista ainda</p>
+          <p class="text-slate-400 text-sm">Completa lições e desafios para desbloquear as tuas primeiras conquistas!</p>
+        </div>
+
+        <!-- Grid de conquistas desbloqueadas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" *ngIf="conquistasDesbloqueadas().length > 0">
+          <div
+            *ngFor="let conquista of conquistasDesbloqueadas()"
+            class="relative group bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 hover:border-slate-600 transition-all duration-300 overflow-hidden">
+
+            <!-- Glow de fundo -->
+            <div
+              *ngIf="catalogoDe(conquista) as cat"
+              [class]="'absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-30 ' + corClasses(cat.cor).bg">
+            </div>
+
+            <div class="relative z-10 flex flex-col gap-3">
+              <!-- Ícone + XP -->
+              <div class="flex items-start justify-between">
+                <div
+                  *ngIf="catalogoDe(conquista) as cat"
+                  [class]="'w-12 h-12 rounded-xl border flex items-center justify-center ' + corClasses(cat.cor).bg + ' ' + corClasses(cat.cor).border + ' ' + corClasses(cat.cor).glow">
+                  <ng-container [ngSwitch]="cat.iconeCategoria">
+                    <svg *ngSwitchCase="'estrela'" [class]="'w-6 h-6 ' + corClasses(cat.cor).text" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+                    <svg *ngSwitchCase="'fogo'" [class]="'w-6 h-6 ' + corClasses(cat.cor).text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
+                    <svg *ngSwitchCase="'livro'" [class]="'w-6 h-6 ' + corClasses(cat.cor).text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                    <svg *ngSwitchCase="'moeda'" [class]="'w-6 h-6 ' + corClasses(cat.cor).text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                    <svg *ngSwitchCase="'escudo'" [class]="'w-6 h-6 ' + corClasses(cat.cor).text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <svg *ngSwitchCase="'trofeu'" [class]="'w-6 h-6 ' + corClasses(cat.cor).text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><path d="M7 4h10v6a5 5 0 0 1-5 5 5 5 0 0 1-5-5V4z"/><path d="M7 9H4a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4"/><path d="M17 9h3a2 2 0 0 0 2-2V6a1 1 0 0 0-1-1h-4"/></svg>
+                    <svg *ngSwitchCase="'raio'" [class]="'w-6 h-6 ' + corClasses(cat.cor).text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <svg *ngSwitchCase="'alvo'" [class]="'w-6 h-6 ' + corClasses(cat.cor).text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    <svg *ngSwitchDefault [class]="'w-6 h-6 ' + corClasses(cat.cor).text" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+                  </ng-container>
+                </div>
+                <!-- Ícone genérico se não está no catálogo -->
+                <div *ngIf="!catalogoDe(conquista)"
+                     class="w-12 h-12 rounded-xl bg-yellow-500/20 border border-yellow-500/40 flex items-center justify-center shadow-[0_0_20px_rgba(234,179,8,0.3)]">
+                  <svg class="w-6 h-6 text-yellow-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+                </div>
+
+                <div class="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-2.5 py-1">
+                  <svg class="w-3 h-3 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span class="text-emerald-400 text-xs font-bold">+{{ conquista.xpRecompensa }} XP</span>
+                </div>
+              </div>
+
+              <!-- Título e descrição -->
+              <div>
+                <h3 class="text-white font-semibold text-sm leading-tight">{{ conquista.titulo }}</h3>
+                <p class="text-slate-400 text-xs mt-1 leading-relaxed">{{ conquista.descricao }}</p>
+              </div>
+
+              <!-- Data -->
+              <div class="flex items-center gap-1.5 pt-1 border-t border-slate-700/50">
+                <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span class="text-slate-500 text-xs">{{ formatarData(conquista.dataObtida) }}</span>
+                <span class="ml-auto text-xs font-medium text-emerald-400 bg-emerald-500/10 rounded-full px-2 py-0.5">Desbloqueada</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════ BLOQUEADAS ══════════════════════ -->
+      <div *ngIf="conquistasBloqueadas().length > 0">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-1.5 h-6 bg-slate-600 rounded-full"></div>
+          <h2 class="text-lg font-bold text-white">Por Desbloquear</h2>
+          <span class="text-xs font-medium text-slate-400 bg-slate-700/60 border border-slate-600/40 rounded-full px-2.5 py-0.5">
+            {{ conquistasBloqueadas().length }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            *ngFor="let cat of conquistasBloqueadas()"
+            class="relative bg-slate-800/30 border border-slate-700/30 rounded-2xl p-5 opacity-60 hover:opacity-80 transition-opacity duration-300">
+
+            <div class="flex flex-col gap-3">
+              <!-- Ícone bloqueado -->
+              <div class="flex items-start justify-between">
+                <div class="w-12 h-12 rounded-xl bg-slate-700/60 border border-slate-600/40 flex items-center justify-center">
+                  <svg class="w-6 h-6 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <div class="flex items-center gap-1 bg-slate-700/60 border border-slate-600/40 rounded-full px-2.5 py-1">
+                  <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span class="text-slate-400 text-xs font-bold">+{{ cat.xpRecompensa }} XP</span>
+                </div>
+              </div>
+
+              <!-- Título e descrição -->
+              <div>
+                <h3 class="text-slate-300 font-semibold text-sm leading-tight">{{ cat.titulo }}</h3>
+                <p class="text-slate-500 text-xs mt-1 leading-relaxed">{{ cat.descricao }}</p>
+              </div>
+
+              <!-- Critério -->
+              <div class="flex items-center gap-1.5 pt-1 border-t border-slate-700/40">
+                <svg class="w-3.5 h-3.5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span class="text-slate-500 text-xs">{{ cat.criterio }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
   </div>
 </app-dashboard-layout>

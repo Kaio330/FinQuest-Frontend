@@ -1,7 +1,11 @@
 import { Component, signal, computed, ElementRef, ViewChild, AfterViewChecked, OnInit, inject } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/auth.service';
+import { JogadorService } from '../../services/jogador.service';
 
 interface User { name: string; level: number; xp: number; xpNextLevel: number; coins: number; streak: number; avatarUrl: string; }
 interface Mission { id: number; title: string; module?: string; description?: string; rewardXp: number; rewardCoins: number; difficulty: string; completed: boolean; }
@@ -32,8 +36,6 @@ interface Nivel {
   licoes: Licao[];
 }
 
-
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -43,8 +45,11 @@ interface Nivel {
 })
 export class DashboardComponent implements AfterViewChecked, OnInit {
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
+
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080';
+  private authService = inject(AuthService);
+  private jogadorService = inject(JogadorService);
+  private apiUrl = environment.apiUrl;
 
   // Estado UI
   activeTab = signal<string>('trilhas');
@@ -71,26 +76,40 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
   });
 
   ngOnInit() {
-    this.carregarDadosJogador(1); // Id mocado para teste
+    const jogadorId = this.authService.getJogadorId();
+    this.carregarDadosJogador(jogadorId);
     this.carregarDadosDoBackEnd();
   }
 
   carregarDadosJogador(id: number) {
-    this.http.get<any>(`http://localhost:8080/api/jogador/buscarPorId/${id}`).subscribe({
+    this.jogadorService.buscarPorId(id).subscribe({
       next: (data) => {
         if (data) {
           this.user.update(u => ({
             ...u,
-            name: data.nome || u.name,
+            name: data.nomePlayer || u.name,
             level: data.nivelAtual || u.level,
-            xp: data.xpAtual || u.xp,
-            xpNextLevel: data.xpProximoNivel || u.xpNextLevel,
-            coins: data.moedas || u.coins,
-            avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.nome || 'User'}&backgroundColor=0f172a`
+            xp: data.xpPlayer || u.xp,
+            xpNextLevel: u.xpNextLevel, // não existe no backend ainda
+            coins: u.coins,             // não existe no backend ainda
+            streak: u.streak,
+            avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.nomePlayer || 'User'}&backgroundColor=0f172a`
           }));
+          this.authService.atualizarSessao(data);
         }
       },
       error: (err) => {
+        // Fallback: usa dados da sessão se o backend falhar
+        const sessao = this.authService.getJogadorAtual();
+        if (sessao) {
+          this.user.update(u => ({
+            ...u,
+            name: sessao.nomePlayer || u.name,
+            level: sessao.nivelAtual || u.level,
+            xp: sessao.xpPlayer || u.xp,
+            avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${sessao.nomePlayer || 'User'}&backgroundColor=0f172a`
+          }));
+        }
         console.error('Erro ao buscar dados do jogador:', err);
       }
     });
@@ -104,65 +123,81 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
   }
 
   carregarDadosDoBackEnd() {
-    this.http.get<any[]>(this.apiUrl + '/niveis/listar').subscribe({
-      next: (niveisData) => {
-        const niveisFormatados = niveisData.map(n => ({
-          numNivel: n.numeroNivel,
-          titulo: n.titulo,
-          xpMinimo: 0,
-          licoes: [] // licoes serão carregadas separadamente
-        }));
-        this.niveis.set(niveisFormatados);
-
-        // Fetch licoes for each nivel
+    // Carrega níveis e lições em paralelo usando RxJS
+    forkJoin({
+      niveis: this.http.get<any[]>(`${this.apiUrl}/niveis/listar`),
+      licoes: this.http.get<any[]>(`${this.apiUrl}/licoes/listar`)
+    }).subscribe({
+      next: ({ niveis: niveisData, licoes: licoesData }) => {
+        // Para cada lição, precisamos buscar as questões
+        const licoesPorNivel: { [nivelId: number]: any[] } = {};
         niveisData.forEach(n => {
-           this.http.get<any[]>(this.apiUrl + '/licoes/listar').subscribe({
-             next: (licoesData) => {
-               const licoesDoNivel = licoesData.filter(l => l.nivelId === n.id);
-               const licoesComQuestoesPromises = licoesDoNivel.map(l => {
-                 return new Promise<Licao>((resolve) => {
-                    this.http.get<any[]>(this.apiUrl + '/questoes/licao/' + l.id).subscribe({
-                      next: (questoesData) => {
-                         resolve({
-                           idLicao: l.id,
-                           titulo: l.titulo,
-                           conteudo: l.conteudo,
-                           vidasJogador: 3,
-                           recompensaXP: 100,
-                           recompensaCredito: 25,
-                           questoes: questoesData.map(q => ({
-                             idQuestao: q.id,
-                             enunciado: q.enunciado,
-                             alternativas: [q.alternativaA, q.alternativaB, q.alternativaC, q.alternativaD].filter(Boolean),
-                             respostaCorreta: ['A', 'B', 'C', 'D'].indexOf(q.respostaCorreta)
-                           }))
-                         });
-                      }
-                    });
-                 });
-               });
+          licoesPorNivel[n.id] = licoesData.filter(l => l.nivelId === n.id);
+        });
 
-               Promise.all(licoesComQuestoesPromises).then(licoesFormatadas => {
-                  this.niveis.update(currentNiveis => {
-                     const nivelIndex = currentNiveis.findIndex(cn => cn.numNivel === n.numeroNivel);
-                     if (nivelIndex !== -1) {
-                        const updatedNiveis = [...currentNiveis];
-                        updatedNiveis[nivelIndex].licoes = licoesFormatadas;
-                        return updatedNiveis;
-                     }
-                     return currentNiveis;
-                  });
-               });
-             }
-           });
+        const todasLicoesIds = licoesData.map(l => l.id);
+
+        if (todasLicoesIds.length === 0) {
+          this.montarNiveisComLicoes(niveisData, licoesData, {});
+          return;
+        }
+
+        // Busca questões de todas as lições em paralelo
+        const questoesRequests: { [licaoId: number]: any } = {};
+        todasLicoesIds.forEach(id => {
+          questoesRequests[id] = this.http.get<any[]>(`${this.apiUrl}/questoes/licao/${id}`);
+        });
+
+        forkJoin(questoesRequests).subscribe({
+          next: (questoesPorLicao) => {
+            this.montarNiveisComLicoes(niveisData, licoesData, questoesPorLicao as { [licaoId: number]: any[] });
+          },
+          error: () => {
+            // Se falhar ao buscar questões, monta sem elas
+            this.montarNiveisComLicoes(niveisData, licoesData, {});
+          }
         });
       },
       error: (err) => {
-        console.error('Erro ao carregar níveis do backend', err);
-        // Fallback to mock data if backend fails
+        console.error('Erro ao carregar dados do backend', err);
         this.carregarNiveisMockados();
       }
     });
+  }
+
+  private montarNiveisComLicoes(
+    niveisData: any[],
+    licoesData: any[],
+    questoesPorLicao: { [licaoId: number]: any[] }
+  ) {
+    const niveisFormatados: Nivel[] = niveisData.map(n => {
+      const licoesDoNivel = licoesData.filter(l => l.nivelId === n.id);
+      const licoesFormatadas: Licao[] = licoesDoNivel.map(l => ({
+        idLicao: l.id,
+        titulo: l.titulo,
+        conteudo: l.conteudo,
+        vidasJogador: 3,
+        recompensaXP: l.xpRecompensa || 100,
+        recompensaCredito: l.moedaRecompensa || 25,
+        questoes: (questoesPorLicao[l.id] || []).map((q: any) => ({
+          idQuestao: q.id,
+          enunciado: q.enunciado,
+          alternativas: [q.alternativaA, q.alternativaB, q.alternativaC, q.alternativaD].filter(Boolean),
+          respostaCorreta: ['A', 'B', 'C', 'D'].indexOf(q.respostaCorreta)
+        }))
+      }));
+
+      return {
+        numNivel: n.numeroNivel,
+        titulo: n.titulo,
+        xpMinimo: n.xpMinimo || 0,
+        licoes: licoesFormatadas
+      };
+    });
+
+    // Ordena por número de nível
+    niveisFormatados.sort((a, b) => a.numNivel - b.numNivel);
+    this.niveis.set(niveisFormatados);
   }
 
   carregarNiveisMockados() {
@@ -231,7 +266,7 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
         numNivel: 2,
         titulo: 'Mergulho nos Investimentos',
         xpMinimo: 1000,
-        licoes: [] // Futuras lições
+        licoes: []
       }
     ]);
   }
@@ -288,25 +323,38 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
   finalizarEvolucao() {
     const licao = this.licaoAtiva();
     if (licao) {
+      // Atualiza XP e moedas localmente
       this.user.update(u => ({
         ...u,
         xp: u.xp + licao.recompensaXP,
         coins: u.coins + licao.recompensaCredito
       }));
+      // Sincroniza XP na sessão
+      const jogadorAtual = this.authService.getJogadorAtual();
+      if (jogadorAtual) {
+        this.authService.atualizarSessao({
+          xpPlayer: (jogadorAtual.xpPlayer || 0) + licao.recompensaXP
+        });
+      }
     }
     this.sairLicao();
   }
 
-  // Dados do Usuário (Sinal que inicia mocado e depois atualiza)
-  user = signal<User>({
-    name: 'Carregando...',
-    level: 1,
-    xp: 0,
-    xpNextLevel: 100,
-    coins: 0,
-    streak: 7,
-    avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=User&backgroundColor=0f172a'
-  });
+  // Dados do Usuário (inicia com dados da sessão armazenada e depois atualiza do backend)
+  user = signal<User>(this.buildUserFromSessao());
+
+  private buildUserFromSessao(): User {
+    const sessao = this.authService.getJogadorAtual();
+    return {
+      name: sessao?.nomePlayer || 'Carregando...',
+      level: sessao?.nivelAtual || 1,
+      xp: sessao?.xpPlayer || 0,
+      xpNextLevel: 100,  // calculado localmente: nivel * 100
+      coins: 0,
+      streak: 0,
+      avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${sessao?.nomePlayer || 'User'}&backgroundColor=0f172a`
+    };
+  }
 
   xpPercentage = computed(() => {
     const nextLevel = this.user().xpNextLevel;
@@ -395,7 +443,7 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
 
   async askMentor() {
     if (!this.chatInput.trim() || this.isTyping()) return;
-    
+
     const userMessage = this.chatInput.trim();
     this.chatHistory.update(h => [...h, { role: 'user', text: userMessage }]);
     this.chatInput = '';
@@ -407,7 +455,7 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
     const payload = {
       systemInstruction: { parts: [{ text: `Você é o Mentor IA do app FinQuest. O usuário é nível ${this.user().level}. Respostas curtas e didáticas.` }] },
       contents: [{ parts: [{ text: userMessage }] }],
-      tools: [{ google_search: {} }] 
+      tools: [{ google_search: {} }]
     };
 
     try {
