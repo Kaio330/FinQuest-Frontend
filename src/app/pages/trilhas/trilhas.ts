@@ -1,7 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { forkJoin } from 'rxjs';
 import { TrilhaService } from '../../services/trilha.service';
-import { Nivel } from '../../models/nivel.model';
+import { LicaoService } from '../../services/licao.service';
+import { Nivel, Licao } from '../../models/nivel.model';
 import { DashboardLayout } from '../../components/dashboard-layout/dashboard-layout';
 import { RouterModule } from '@angular/router';
 
@@ -16,51 +18,34 @@ import { Header } from '../../components/header/header';
 })
 export class Trilhas implements OnInit {
   private trilhaService = inject(TrilhaService);
+  private licaoService = inject(LicaoService);
+
   niveis: Nivel[] = [];
   loading = true;
   error = '';
 
   ngOnInit() {
-    this.trilhaService.getTrilhas().subscribe({
+    // Fetch both Niveis and Licoes from the backend in parallel
+    forkJoin({
+      niveis: this.trilhaService.getTrilhas(),
+      licoes: this.licaoService.getLicoes()
+    }).subscribe({
       next: (data) => {
-        this.niveis = data;
+        // Map the flat licoes array to their corresponding nivel
+        this.niveis = data.niveis.map(nivel => {
+          return {
+            ...nivel,
+            licoes: data.licoes.filter(licao => licao.nivelId === nivel.id)
+          };
+        });
+
+        // Sort niveis by number just to be safe
+        this.niveis.sort((a, b) => a.numeroNivel - b.numeroNivel);
+
         this.loading = false;
       },
       error: (err) => {
-        // Fallback to mock data if backend is not running to show the UI
-        this.niveis = [
-          {
-            id: 1,
-            numeroNivel: 1,
-            xpMinimo: 0,
-            recompensas: 100,
-            titulo: "Introdução à Economia Pessoal",
-            licoes: [
-              {
-                id: 1,
-                conteudo: "Aprenda os conceitos básicos de ganhos, gastos e o que significa poupar de verdade.",
-                ordemNoNivel: 1,
-                nivelId: 1,
-                titulo: "O Valor do Dinheiro",
-                xpRecompensa: 100,
-                moedaRecompensa: 25,
-                quantidadeQuestoes: 2
-              },
-              {
-                id: 2,
-                conteudo: "Como aqueles pequenos gastos diários estão a corroer a sua riqueza.",
-                ordemNoNivel: 2,
-                nivelId: 1,
-                titulo: "Despesas Invisíveis",
-                xpRecompensa: 150,
-                moedaRecompensa: 30,
-                quantidadeQuestoes: 1
-              }
-            ]
-          }
-        ];
-        // Don't show error, just use mock data to demonstrate UI
-        // this.error = 'Failed to load trilhas. Backend might not be running.';
+        this.error = 'Erro ao carregar as trilhas. O backend não está respondendo.';
         this.loading = false;
         console.error(err);
       }
