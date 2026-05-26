@@ -72,7 +72,29 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
   });
 
   ngOnInit() {
+    this.carregarDadosJogador(1); // Id mocado para teste
     this.carregarDadosDoBackEnd();
+  }
+
+  carregarDadosJogador(id: number) {
+    this.http.get<any>(`http://localhost:8080/api/jogador/buscarPorId/${id}`).subscribe({
+      next: (data) => {
+        if (data) {
+          this.user.update(u => ({
+            ...u,
+            name: data.nome || u.name,
+            level: data.nivelAtual || u.level,
+            xp: data.xpAtual || u.xp,
+            xpNextLevel: data.xpProximoNivel || u.xpNextLevel,
+            coins: data.moedas || u.coins,
+            avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.nome || 'User'}&backgroundColor=0f172a`
+          }));
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao buscar dados do jogador:', err);
+      }
+    });
   }
 
   mudarAba(aba: string) {
@@ -276,18 +298,22 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
     this.sairLicao();
   }
 
-  // Dados do Usuário (Mock)
+  // Dados do Usuário (Sinal que inicia mocado e depois atualiza)
   user = signal<User>({
-    name: 'Kaio',
-    level: 5,
-    xp: 2450,
-    xpNextLevel: 3000,
-    coins: 1250,
+    name: 'Carregando...',
+    level: 1,
+    xp: 0,
+    xpNextLevel: 100,
+    coins: 0,
     streak: 7,
-    avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kaio&backgroundColor=0f172a'
+    avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=User&backgroundColor=0f172a'
   });
 
-  xpPercentage = computed(() => Math.round((this.user().xp / this.user().xpNextLevel) * 100));
+  xpPercentage = computed(() => {
+    const nextLevel = this.user().xpNextLevel;
+    if (!nextLevel || nextLevel === 0) return 0;
+    return Math.round((this.user().xp / nextLevel) * 100);
+  });
 
   // GEMINI API: Funcionalidade 1 - Missão Bônus
   generatedBonusMission = signal<Mission | null>(null);
