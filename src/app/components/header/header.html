@@ -3,7 +3,7 @@
     <h1>{{ title }}</h1>
     <p>{{ subtitle }}</p>
   </div>
-  <div class="header-actions">
+  <div class="header-actions" *ngIf="jogador">
     <div class="coins-badge">
       <span class="coin-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -11,19 +11,19 @@
           <path d="M12 7V17M10 9H14M10 15H14" stroke="#D4AC0D" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </span>
-      <span>1250</span>
+      <span>{{ jogador.moedas || 0 }}</span>
     </div>
     <div class="user-level">
       <div class="level-info">
-        <span class="level-text">NÍVEL 5</span>
+        <span class="level-text">NÍVEL {{ jogador.nivelAtual || 1 }}</span>
         <div class="progress-bar-container">
-          <div class="progress-bar-fill" style="width: 81.6%;"></div>
+          <div class="progress-bar-fill" [style.width.%]="((jogador.xpAtual || 0) / (jogador.xpProximoNivel || 1)) * 100"></div>
         </div>
-        <span class="xp-text">2450 / 3000 XP</span>
+        <span class="xp-text">{{ jogador.xpAtual || 0 }} / {{ jogador.xpProximoNivel || 100 }} XP</span>
       </div>
       <div class="avatar">
-        <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=Samuel" alt="User Avatar" />
-        <span class="level-badge">5</span>
+        <img [src]="'https://api.dicebear.com/9.x/avataaars/svg?seed=' + (jogador.nome || 'User')" alt="User Avatar" />
+        <span class="level-badge">{{ jogador.nivelAtual || 1 }}</span>
       </div>
     </div>
   </div>
