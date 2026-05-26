@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Nivel } from '../models/nivel.model';
+import { Nivel, Licao } from '../models/nivel.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -9,9 +9,12 @@ import { environment } from '../../environments/environment';
 })
 export class TrilhaService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/niveis`;
 
   getTrilhas(): Observable<Nivel[]> {
-    return this.http.get<Nivel[]>(`${this.apiUrl}/listar`);
+    return this.http.get<Nivel[]>(`${environment.apiUrl}/niveis/listar`);
+  }
+
+  getLicoes(): Observable<Licao[]> {
+    return this.http.get<Licao[]>(`${environment.apiUrl}/licoes/listar`);
   }
 }

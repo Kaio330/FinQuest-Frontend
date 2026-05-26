@@ -185,3 +185,9 @@
 .error {
   color: #d32f2f;
 }
+.nivel-descricao {
+  color: #8c9bba;
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}

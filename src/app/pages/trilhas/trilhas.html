@@ -16,8 +16,8 @@
             <div class="nivel-badge">{{ nivel.numeroNivel }}</div>
             <h3>{{ nivel.titulo }}</h3>
           </div>
-          <span class="xp-badge" *ngIf="nivel.xpMinimo">Requer: {{ nivel.xpMinimo }} XP</span>
         </div>
+        <p *ngIf="nivel.descricao" class="nivel-descricao">{{ nivel.descricao }}</p>
 
         <div class="licoes-grid" *ngIf="nivel.licoes && nivel.licoes.length > 0">
           <div class="licao-card" *ngFor="let licao of nivel.licoes">
@@ -27,25 +27,13 @@
                   <polygon points="5 3 19 12 5 21 5 3"></polygon>
                 </svg>
               </div>
-              <div class="licao-rewards">
-                <span class="reward xp" *ngIf="licao.xpRecompensa">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                  {{ licao.xpRecompensa }}
-                </span>
-                <span class="reward coin" *ngIf="licao.moedaRecompensa">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#F1C40F">
-                    <circle cx="12" cy="12" r="10"/>
-                  </svg>
-                  {{ licao.moedaRecompensa }}
-                </span>
-              </div>
             </div>
 
             <h4>{{ licao.titulo }}</h4>
             <p>{{ licao.conteudo }}</p>
 
             <div class="licao-footer">
-              <span class="questoes-count" *ngIf="licao.quantidadeQuestoes">{{ licao.quantidadeQuestoes }} Questões</span>
+              <span class="questoes-count">Ordem: {{ licao.ordemNoNivel }}</span>
               <a [routerLink]="['/simulados', licao.id]" class="btn-iniciar">
                 Começar
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
