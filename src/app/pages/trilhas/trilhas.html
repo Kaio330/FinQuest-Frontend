@@ -1,0 +1,50 @@
+<app-dashboard-layout>
+  <app-header title="Trilha De Aprendizado" subtitle="Bem-vindo de volta, Samuel!"></app-header>
+  <div class="trilhas-container">
+    <div class="page-header">
+      <h2>Trilhas de Conhecimento</h2>
+      <p>Complete as lições de cada nível para ganhar experiência e moedas.</p>
+    </div>
+
+    <div *ngIf="loading" class="loading">Carregando trilhas...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div class="trilha-list" *ngIf="!loading && !error">
+      <div class="nivel-card" *ngFor="let nivel of niveis">
+        <div class="nivel-header">
+          <div class="nivel-title-group">
+            <div class="nivel-badge">{{ nivel.numeroNivel }}</div>
+            <h3>{{ nivel.titulo }}</h3>
+          </div>
+        </div>
+        <p *ngIf="nivel.descricao" class="nivel-descricao">{{ nivel.descricao }}</p>
+
+        <div class="licoes-grid" *ngIf="nivel.licoes && nivel.licoes.length > 0">
+          <div class="licao-card" *ngFor="let licao of nivel.licoes">
+            <div class="licao-header">
+              <div class="licao-icon-bg">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2ED573" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </div>
+            </div>
+
+            <h4>{{ licao.titulo }}</h4>
+            <p>{{ licao.conteudo }}</p>
+
+            <div class="licao-footer">
+              <span class="questoes-count">Ordem: {{ licao.ordemNoNivel }}</span>
+              <a [routerLink]="['/simulados', licao.id]" class="btn-iniciar">
+                Começar
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-dashboard-layout>
