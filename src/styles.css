@@ -1,37 +1,5 @@
-:root {
-  --bg-dark: #0f172a;
-  --bg-darker: #050810;
-  --card-bg: rgba(30, 41, 59, 0.6);
-  --border-color: rgba(51, 65, 85, 0.5);
-  
-  --text-main: #ffffff;
-  --text-muted: #94a3b8;
-  
-  --neon-green: #10b981;
-  --neon-green-hover: #34d399;
-  --neon-purple: #8b5cf6;
-  
-  --input-bg: rgba(15, 23, 42, 0.5);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:host {
-  display: block;
-  min-height: 100vh;
-  width: 100%;
-}
-
-
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100vh;
-  box-sizing: border-box;
-  background-color: #050810;
-}
-
-app-dashboard, app-root {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+/* You can add global styles to this file, and also import other style files */

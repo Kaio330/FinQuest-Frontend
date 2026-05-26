@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { Inicio } from './pages/inicio/inicio';
 import { Trilhas } from './pages/trilhas/trilhas';
+import { DashboardComponent } from './pages/dashboard/dashboard';
 import { Conquistas } from './pages/conquistas/conquistas';
 import { Simulados } from './pages/simulados/simulados';
 
@@ -12,6 +13,14 @@ export const routes: Routes = [
     },
     {
         path: "inicio",
+        component: Inicio
+    },
+    {
+        path: "dashboard",
+        component: DashboardComponent
+    },
+    {
+        path: "old-inicio",
         component: Inicio
     },
     {
@@ -28,7 +37,7 @@ export const routes: Routes = [
     },
     {
         path: "",
-        redirectTo: "inicio",
+        redirectTo: "dashboard",
         pathMatch: "full"
     }
 ];
