@@ -2,7 +2,6 @@ import { Component, signal, computed, ElementRef, ViewChild, AfterViewChecked, O
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { GoogleGenAI } from "@google/genai";
 
 interface User { name: string; level: number; xp: number; xpNextLevel: number; coins: number; streak: number; avatarUrl: string; }
 interface Mission { id: number; title: string; module?: string; description?: string; rewardXp: number; rewardCoins: number; difficulty: string; completed: boolean; }
@@ -45,7 +44,7 @@ interface Nivel {
 export class DashboardComponent implements AfterViewChecked, OnInit {
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = 'http://localhost:8080';
 
   // Estado UI
   activeTab = signal<string>('trilhas');
