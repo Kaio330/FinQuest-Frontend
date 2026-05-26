@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class TrilhaService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/niveis`;
+  private apiUrl = `${environment.apiUrl}/niveis`;
 
   getTrilhas(): Observable<Nivel[]> {
     return this.http.get<Nivel[]>(`${this.apiUrl}/listar`);

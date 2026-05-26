@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class ConquistaService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/conquistas`;
+  private apiUrl = `${environment.apiUrl}/conquistas`;
 
   getConquistas(jogadorId: number): Observable<Conquista[]> {
     return this.http.get<Conquista[]>(`${this.apiUrl}/jogador/${jogadorId}`);

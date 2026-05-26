@@ -1,0 +1,194 @@
+<div class="app-layout">
+  
+  <div class="glow-bg glow-emerald"></div>
+  <div class="glow-bg glow-purple"></div>
+
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <h1>Fin<span>Quest</span></h1>
+    </div>
+
+    <nav class="nav-menu">
+      <button (click)="activeTab.set('dashboard')" [class.active]="activeTab() === 'dashboard'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button (click)="activeTab.set('mentor')" [class.active-purple]="activeTab() === 'mentor'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        Mentor IA
+        <span class="badge badge-purple">BETA</span>
+      </button>
+      <button (click)="activeTab.set('trilhas')" [class.active]="activeTab() === 'trilhas'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+        Trilhas
+      </button>
+
+      
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="help-card">
+        <h4>Dúvidas?</h4>
+        <p>Fale agora com nosso Mentor.</p>
+        <button (click)="activeTab.set('mentor')" class="btn-outline">Chamar Mentor</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    
+    <header class="topbar">
+      <div class="page-title">
+        <h2>
+          @if(activeTab() === 'dashboard') { Visão Geral }
+          @else if(activeTab() === 'mentor') { 
+            Mentor de Inteligência Artificial 
+            <svg style="display:inline; margin-left:8px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          }
+          @else { {{ activeTab() }} }
+        </h2>
+        <p>Bem-vindo de volta, {{ user().name }}!</p>
+      </div>
+
+      <div class="user-info">
+        <div class="coins-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#eab308"><circle cx="12" cy="12" r="10"/><path d="M16 12a4 4 0 0 0-8 0" stroke="#0f172a" stroke-width="2"/></svg>
+          <span style="color:#eab308;">{{ user().coins }}</span>
+        </div>
+        
+        <div class="xp-section">
+          <p class="level-text">Nível {{ user().level }}</p>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="xpPercentage()"></div>
+          </div>
+          <p class="xp-text">{{ user().xp }} / {{ user().xpNextLevel }} XP</p>
+        </div>
+
+        <img [src]="user().avatarUrl" alt="Avatar" class="avatar-img">
+      </div>
+    </header>
+
+    <div class="scroll-area">
+      
+      @if (activeTab() === 'dashboard') {
+        <div class="dashboard-wrapper">
+          
+          <div class="stats-grid">
+            <div class="stat-card border-emerald">
+              <p>XP Acumulado</p>
+              <h3>{{ user().xp }}</h3>
+            </div>
+            <div class="stat-card border-orange">
+              <p>Ofensiva Atual</p>
+              <h3>{{ user().streak }} <span>Dias</span></h3>
+            </div>
+            <div class="stat-card border-purple">
+              <p>Aulas Concluídas</p>
+              <h3>12 <span>/ 40</span></h3>
+            </div>
+          </div>
+
+          <div class="content-grid">
+            <div class="missions-col">
+              
+              <div class="ai-mission-card">
+                @if (!generatedBonusMission() && !isGeneratingMission()) {
+                  <h3>Desafio Dinâmico IA</h3>
+                  <p>Gere uma missão financeira personalizada de acordo com o seu nível.</p>
+                  <button (click)="generateBonusMission()" class="btn-purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    Gerar Missão Bônus
+                  </button>
+                } @else if (isGeneratingMission()) {
+                  <h3 class="loading-text">Analisando seu perfil...</h3>
+                } @else if (generatedBonusMission()) {
+                  <span class="badge badge-purple">Missão Especial</span>
+                  <h3>{{ generatedBonusMission()?.title }}</h3>
+                  <p>{{ generatedBonusMission()?.description }}</p>
+                  <div class="mission-rewards">
+                    <span class="reward xp">+{{ generatedBonusMission()?.rewardXp }} XP</span>
+                    <span class="reward coins">+{{ generatedBonusMission()?.rewardCoins }} Moedas</span>
+                    <button (click)="acceptMission()" class="btn-emerald">Aceitar</button>
+                  </div>
+                }
+              </div>
+
+            </div>
+
+            <div class="achievements-col">
+              <h3>Últimas Conquistas</h3>
+              <div class="achievements-list">
+                @for (achiev of recentAchievements(); track achiev.id) {
+                  <div class="achievement-item">
+                    <div class="achiev-icon {{ achiev.iconClass }}">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                    </div>
+                    <div class="achiev-info">
+                      <h4>{{ achiev.title }}</h4>
+                      <p>{{ achiev.description }}</p>
+                      <span>{{ achiev.date }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (activeTab() === 'mentor') {
+        <div class="chat-wrapper">
+          <div class="chat-container">
+            
+            <div class="chat-messages" #chatScroll>
+              <div class="message ai-message">
+                <div class="avatar ai-avatar">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                </div>
+                <div class="bubble ai-bubble">
+                  Olá, {{ user().name }}! Sou o Mentor do FinQuest. O que quer aprender hoje?
+                </div>
+              </div>
+
+              @for (msg of chatHistory(); track $index) {
+                <div class="message" [ngClass]="msg.role === 'user' ? 'user-message' : 'ai-message'">
+                  <div class="avatar" [ngClass]="msg.role === 'user' ? 'user-avatar' : 'ai-avatar'">
+                    @if (msg.role === 'user') { 
+                      <img [src]="user().avatarUrl"> 
+                    } @else { 
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                    }
+                  </div>
+                  <div class="bubble" [ngClass]="msg.role === 'user' ? 'user-bubble' : 'ai-bubble'">
+                    {{ msg.text }}
+                  </div>
+                </div>
+              }
+
+              @if (isTyping()) {
+                <div class="message ai-message">
+                  <div class="avatar ai-avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                  </div>
+                  <div class="bubble ai-bubble typing-indicator">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="chat-input-area">
+              <input type="text" [(ngModel)]="chatInput" (keyup.enter)="askMentor()" [disabled]="isTyping()" placeholder="Faça uma pergunta sobre finanças...">
+              <button class="btn-send" (click)="askMentor()" [disabled]="!chatInput.trim() || isTyping()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </main>
+</div>
