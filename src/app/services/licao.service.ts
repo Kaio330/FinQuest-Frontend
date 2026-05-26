@@ -1,17 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Questao } from '../models/questao.model';
+import { Licao } from '../models/nivel.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SimuladoService {
+export class LicaoService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/questoes`;
+  private apiUrl = `${environment.apiUrl}/licoes`;
 
-  getQuestoesSimulado(licaoId: number): Observable<Questao[]> {
-    return this.http.get<Questao[]>(`${this.apiUrl}/licao/${licaoId}`);
+  getLicoes(): Observable<Licao[]> {
+    return this.http.get<Licao[]>(`${this.apiUrl}/listar`);
   }
 }

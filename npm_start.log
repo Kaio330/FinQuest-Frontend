@@ -1,0 +1,18 @@
+
+> fin-quest@0.0.0 start
+> ng serve
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names         |  Raw size
+main.js             | main          | 149.24 kB |
+styles.css          | styles        | 667 bytes |
+
+                    | Initial total | 149.91 kB
+
+Application bundle generation complete. [2.446 seconds] - 2026-05-26T00:55:38.365Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+12:55:38 AM [vite] (client) Re-optimizing dependencies because vite config has changed
+  ➜  Local:   http://localhost:4200/
