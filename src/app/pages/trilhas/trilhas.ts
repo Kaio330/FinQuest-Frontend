@@ -11,6 +11,8 @@ interface Questao  { idQuestao: number; enunciado: string; alternativas: string[
 interface Licao    { idLicao: number; titulo: string; conteudo: string; vidasJogador: number; recompensaXP: number; recompensaCredito: number; questoes: Questao[]; }
 interface Nivel    { numNivel: number; titulo: string; xpMinimo: number; licoes: Licao[]; }
 
+
+
 @Component({
   selector: 'app-trilhas',
   standalone: true,
