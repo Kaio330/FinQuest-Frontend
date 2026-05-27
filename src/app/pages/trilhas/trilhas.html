@@ -1,6 +1,7 @@
 <app-dashboard-layout>
   <app-header title="Trilha De Aprendizado" subtitle="Bem-vindo de volta, Samuel!"></app-header>
   <div class="trilhas-container">
+    <p style="color:red">TESTE</p>
     <div class="page-header">
       <h2>Trilhas de Conhecimento</h2>
       <p>Complete as lições de cada nível para ganhar experiência e moedas.</p>
@@ -16,7 +17,9 @@
             <div class="nivel-badge">{{ nivel.numeroNivel }}</div>
             <h3>{{ nivel.titulo }}</h3>
           </div>
-          <span class="xp-badge" *ngIf="nivel.xpMinimo">Requer: {{ nivel.xpMinimo }} XP</span>
+          <span class="xp-badge" *ngIf="nivel.xpMinimo !== undefined">
+            Requer: {{ nivel.xpMinimo }} XP
+          </span>
         </div>
 
         <div class="licoes-grid" *ngIf="nivel.licoes && nivel.licoes.length > 0">
