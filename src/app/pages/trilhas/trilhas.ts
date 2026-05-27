@@ -72,7 +72,7 @@ export class Trilhas implements OnInit {
     const niveis: Nivel[] = nd.map(n => ({
       numNivel: n.numeroNivel,
       titulo:   n.titulo,
-      xpMinimo: n.xpMinimo ?? 0,
+      xpMinimo: (n.numeroNivel - 1) * 100,
       licoes:   ld.filter((l: any) => l.nivelId === n.id).map((l: any) => ({
         idLicao:         l.id,
         titulo:          l.titulo,
@@ -93,7 +93,13 @@ export class Trilhas implements OnInit {
     this.carregando.set(false);
   }
 
-  iniciarLicao(licao: Licao) {
+  iniciarLicao(licao: Licao, nivelXpMinimo: number = 0) {
+    const sessao = this.authService.getJogadorAtual();
+    const xpAtual = sessao?.xpPlayer ?? 0;
+    if (xpAtual < nivelXpMinimo) {
+      alert(`Você precisa de ${nivelXpMinimo} XP para acessar esta lição. Você tem ${xpAtual} XP.`);
+      return;
+    }
     this.licaoAtiva.set(licao);
     this.vidas.set(licao.vidasJogador);
     this.questaoIndex.set(0);
