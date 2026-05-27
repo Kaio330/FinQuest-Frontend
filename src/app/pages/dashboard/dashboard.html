@@ -1,36 +1,36 @@
 <app-dashboard-layout title="Visão Geral">
 
-  <div class="p-8 max-w-6xl mx-auto space-y-8">
+  <div class="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto space-y-6 lg:space-y-8">
 
     <!-- GRID DE ESTATÍSTICAS -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
 
-      <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700 rounded-3xl p-6 shadow-xl relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
+      <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700 rounded-3xl p-5 lg:p-6 shadow-xl relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
         <div class="absolute -right-6 -top-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-colors"></div>
         <div class="flex items-start justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-400 mb-1">XP Total Acumulado</p>
-            <h3 class="text-4xl font-bold text-white tracking-tight">{{ jogador?.xpPlayer || 0 }}</h3>
+            <p class="text-xs sm:text-sm font-medium text-slate-400 mb-1">XP Total Acumulado</p>
+            <h3 class="text-3xl lg:text-4xl font-bold text-white tracking-tight">{{ jogador?.xpPlayer || 0 }}</h3>
           </div>
-          <div class="w-12 h-12 bg-slate-900/50 rounded-2xl flex items-center justify-center text-emerald-400 shadow-inner">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <div class="w-10 h-10 lg:w-12 lg:h-12 bg-slate-900/50 rounded-2xl flex items-center justify-center text-emerald-400 shadow-inner shrink-0">
+            <svg class="w-5 h-5 lg:w-6 lg:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
         </div>
-        <div class="mt-6 flex items-center gap-2 text-xs font-medium text-emerald-400 bg-emerald-400/10 w-fit px-3 py-1.5 rounded-lg">
+        <div class="mt-4 lg:mt-6 flex items-center gap-2 text-xs font-medium text-emerald-400 bg-emerald-400/10 w-fit px-3 py-1.5 rounded-lg">
           <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
           Nível {{ jogador?.nivelAtual || 1 }}
         </div>
       </div>
 
-      <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700 rounded-3xl p-6 shadow-xl relative overflow-hidden group hover:border-orange-500/30 transition-colors">
+      <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700 rounded-3xl p-5 lg:p-6 shadow-xl relative overflow-hidden group hover:border-orange-500/30 transition-colors">
         <div class="absolute -right-6 -top-6 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl group-hover:bg-orange-500/20 transition-colors"></div>
         <div class="flex items-start justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-400 mb-1">XP para Próximo Nível</p>
-            <h3 class="text-4xl font-bold text-white tracking-tight">{{ xpNextLevel - (jogador?.xpPlayer || 0) }}</h3>
+            <p class="text-xs sm:text-sm font-medium text-slate-400 mb-1">XP para Próximo Nível</p>
+            <h3 class="text-3xl lg:text-4xl font-bold text-white tracking-tight">{{ xpNextLevel - (jogador?.xpPlayer || 0) }}</h3>
           </div>
-          <div class="w-12 h-12 bg-slate-900/50 rounded-2xl flex items-center justify-center text-orange-500 shadow-inner">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <div class="w-10 h-10 lg:w-12 lg:h-12 bg-slate-900/50 rounded-2xl flex items-center justify-center text-orange-500 shadow-inner shrink-0">
+            <svg class="w-5 h-5 lg:w-6 lg:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           </div>
         </div>
         <div class="mt-4">
@@ -41,53 +41,53 @@
         </div>
       </div>
 
-      <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700 rounded-3xl p-6 shadow-xl relative overflow-hidden group hover:border-purple-500/30 transition-colors">
+      <div class="bg-slate-800/60 backdrop-blur-md border border-slate-700 rounded-3xl p-5 lg:p-6 shadow-xl relative overflow-hidden group hover:border-purple-500/30 transition-colors">
         <div class="absolute -right-6 -top-6 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-colors"></div>
         <div class="flex items-start justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-400 mb-1">Vidas Restantes</p>
-            <h3 class="text-4xl font-bold text-white tracking-tight">{{ jogador?.vidasJogador || 0 }}</h3>
+            <p class="text-xs sm:text-sm font-medium text-slate-400 mb-1">Vidas Restantes</p>
+            <h3 class="text-3xl lg:text-4xl font-bold text-white tracking-tight">{{ jogador?.vidasJogador || 0 }}</h3>
           </div>
-          <div class="w-12 h-12 bg-slate-900/50 rounded-2xl flex items-center justify-center text-red-400 shadow-inner">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <div class="w-10 h-10 lg:w-12 lg:h-12 bg-slate-900/50 rounded-2xl flex items-center justify-center text-red-400 shadow-inner shrink-0">
+            <svg class="w-5 h-5 lg:w-6 lg:h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           </div>
         </div>
-        <div class="mt-6 flex items-center gap-1.5">
+        <div class="mt-4 lg:mt-6 flex items-center gap-1.5">
           <span *ngFor="let v of [].constructor(jogador?.vidasJogador || 0)"
-                class="w-6 h-6 text-red-400">
+                class="w-5 h-5 lg:w-6 lg:h-6 text-red-400">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           </span>
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
       <!-- Continuar Jornada -->
       <div class="lg:col-span-2 space-y-4">
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <h3 class="text-base lg:text-lg font-bold text-white flex items-center gap-2">
             <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/></svg>
             Continuar Jornada
           </h3>
-          <a routerLink="/trilhas" class="text-sm text-emerald-400 font-medium hover:text-emerald-300 transition-colors">Ver trilha completa &rarr;</a>
+          <a routerLink="/trilhas" class="text-sm text-emerald-400 font-medium hover:text-emerald-300 transition-colors">Ver trilha &rarr;</a>
         </div>
 
-        <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-3xl p-8 overflow-hidden shadow-2xl">
+        <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-3xl p-6 lg:p-8 overflow-hidden shadow-2xl">
           <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-emerald-900/20 to-transparent pointer-events-none"></div>
-          <svg class="absolute -right-10 -bottom-10 w-64 h-64 text-slate-800/50 pointer-events-none transform -rotate-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <svg class="absolute -right-10 -bottom-10 w-48 lg:w-64 h-48 lg:h-64 text-slate-800/50 pointer-events-none transform -rotate-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           <div class="relative z-10">
-            <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-lg border border-emerald-500/30 uppercase tracking-wider mb-4">
+            <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-lg border border-emerald-500/30 uppercase tracking-wider mb-3 lg:mb-4">
               Módulo 2: Investimentos
             </span>
-            <h2 class="text-2xl font-bold text-white mb-2 tracking-tight">A Magia dos Juros Compostos</h2>
-            <p class="text-slate-400 max-w-lg mb-6 leading-relaxed text-sm">Aprende na prática como os juros compostos funcionam e simula o teu primeiro investimento.</p>
-            <div class="flex items-center gap-4">
+            <h2 class="text-xl lg:text-2xl font-bold text-white mb-2 tracking-tight">A Magia dos Juros Compostos</h2>
+            <p class="text-slate-400 max-w-lg mb-5 lg:mb-6 leading-relaxed text-sm">Aprende na prática como os juros compostos funcionam e simula o teu primeiro investimento.</p>
+            <div class="flex flex-wrap items-center gap-3">
               <a routerLink="/trilhas"
-                 class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:-translate-y-0.5">
+                 class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-2.5 lg:py-3 px-5 lg:px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 text-sm">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 Ir para as Trilhas
               </a>
-              <div class="flex items-center gap-3 text-sm font-medium">
+              <div class="flex items-center gap-2 text-sm font-medium">
                 <span class="text-slate-300 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
                   <span class="text-emerald-400">+500</span> XP
                 </span>
@@ -103,7 +103,7 @@
       <!-- Últimas Conquistas -->
       <div class="space-y-4">
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <h3 class="text-base lg:text-lg font-bold text-white flex items-center gap-2">
             <svg class="w-5 h-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
             Conquistas
           </h3>
@@ -113,11 +113,11 @@
         <div class="bg-slate-800/50 border border-slate-700 rounded-3xl p-5 flex flex-col gap-3">
           <div *ngFor="let achiev of recentAchievements()"
                class="flex items-center gap-3 p-2.5 hover:bg-slate-700/30 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-slate-600/50">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center shadow-inner shrink-0" [ngClass]="achiev.iconColor">
+            <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center shadow-inner shrink-0" [ngClass]="achiev.iconColor">
               <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
             </div>
-            <div>
-              <h4 class="text-white font-bold text-sm">{{ achiev.title }}</h4>
+            <div class="min-w-0">
+              <h4 class="text-white font-bold text-sm truncate">{{ achiev.title }}</h4>
               <p class="text-slate-400 text-xs mt-0.5 line-clamp-1">{{ achiev.description }}</p>
               <span class="text-[10px] text-slate-500 mt-0.5 block font-medium">{{ achiev.date }}</span>
             </div>

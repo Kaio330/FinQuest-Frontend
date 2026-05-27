@@ -1,28 +1,43 @@
 <div class="min-h-screen bg-slate-900 text-slate-100 flex font-sans overflow-hidden w-full">
 
+  <!-- ══════════ OVERLAY MOBILE ══════════ -->
+  <div *ngIf="sidebarAberta()"
+       class="fixed inset-0 z-20 bg-slate-950/70 backdrop-blur-sm lg:hidden"
+       (click)="fecharSidebar()">
+  </div>
+
   <!-- ══════════ SIDEBAR ══════════ -->
-  <aside class="w-72 bg-slate-800/80 border-r border-slate-700/50 flex flex-col relative z-20 backdrop-blur-xl shrink-0">
+  <aside
+    [class]="'fixed inset-y-0 left-0 z-30 w-72 bg-slate-800/95 border-r border-slate-700/50 flex flex-col backdrop-blur-xl transition-transform duration-300 lg:static lg:translate-x-0 lg:shrink-0 '
+      + (sidebarAberta() ? 'translate-x-0' : '-translate-x-full')">
 
     <!-- Logo -->
-    <div class="h-20 flex items-center px-6 border-b border-slate-700/50">
+    <div class="h-16 lg:h-20 flex items-center px-6 border-b border-slate-700/50">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.3)]">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
         <h1 class="text-xl font-bold tracking-tight text-white">Fin<span class="text-emerald-400">Quest</span></h1>
       </div>
+      <!-- Botão fechar (só mobile) -->
+      <button (click)="fecharSidebar()"
+              class="ml-auto lg:hidden w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white rounded-xl hover:bg-slate-700/60 transition-all">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
 
     <!-- Nav -->
     <nav class="flex-1 py-6 px-4 flex flex-col gap-1.5">
       <a routerLink="/dashboard" routerLinkActive="bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
          [routerLinkActiveOptions]="{exact:true}"
+         (click)="fecharSidebar()"
          class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all border border-transparent text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 font-medium text-sm">
         <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
         Dashboard
       </a>
 
       <a routerLink="/trilhas" routerLinkActive="bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+         (click)="fecharSidebar()"
          class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all border border-transparent text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 font-medium text-sm relative">
         <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
         Trilhas
@@ -30,18 +45,21 @@
       </a>
 
       <a routerLink="/objetivos" routerLinkActive="bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+         (click)="fecharSidebar()"
          class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all border border-transparent text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 font-medium text-sm">
         <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
         Objetivos
       </a>
 
       <a routerLink="/conquistas" routerLinkActive="bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+         (click)="fecharSidebar()"
          class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all border border-transparent text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 font-medium text-sm">
         <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
         Conquistas
       </a>
 
       <a routerLink="/mentor" routerLinkActive="bg-purple-500/10 text-purple-400 border-purple-500/30"
+         (click)="fecharSidebar()"
          class="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all border border-transparent text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 font-medium text-sm relative">
         <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
         Mentor IA
@@ -57,7 +75,7 @@
         </div>
         <h4 class="text-xs font-semibold text-slate-200 mb-1">Precisa de ajuda?</h4>
         <p class="text-[11px] text-slate-400 mb-2">Fale com o Mentor de IA.</p>
-        <a routerLink="/mentor" class="block w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-[11px] font-medium text-slate-300 rounded-lg transition-colors border border-slate-600">
+        <a routerLink="/mentor" (click)="fecharSidebar()" class="block w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-[11px] font-medium text-slate-300 rounded-lg transition-colors border border-slate-600">
           Abrir Mentor IA
         </a>
       </div>
@@ -70,41 +88,119 @@
   </aside>
 
   <!-- ══════════ ÁREA PRINCIPAL ══════════ -->
-  <main class="flex-1 flex flex-col h-screen relative overflow-hidden">
+  <main class="flex-1 flex flex-col h-screen relative overflow-hidden min-w-0">
     <!-- Decoração de fundo -->
     <div class="absolute top-0 left-1/4 w-[600px] h-[400px] bg-emerald-600/8 blur-[120px] rounded-full pointer-events-none -z-10"></div>
     <div class="absolute bottom-0 right-0 w-[500px] h-[400px] bg-purple-600/8 blur-[150px] rounded-full pointer-events-none -z-10"></div>
 
     <!-- HEADER -->
-    <header class="h-20 px-8 flex items-center justify-between z-10 border-b border-slate-800/50 bg-slate-900/50 backdrop-blur-md shrink-0">
-      <div>
-        <h2 class="text-xl font-bold text-white tracking-tight">{{ title }}</h2>
-        <p class="text-xs text-slate-400 mt-0.5" *ngIf="subtitle">{{ subtitle }}</p>
-        <p class="text-xs text-slate-400 mt-0.5" *ngIf="!subtitle && jogador.nomePlayer">
+    <header class="h-16 lg:h-20 px-4 lg:px-8 flex items-center justify-between z-10 border-b border-slate-800/50 bg-slate-900/50 backdrop-blur-md shrink-0 gap-3">
+      <!-- Hamburger (só mobile) -->
+      <button (click)="toggleSidebar()"
+              class="lg:hidden w-9 h-9 flex items-center justify-center text-slate-400 hover:text-white rounded-xl hover:bg-slate-700/60 transition-all shrink-0">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
+      <div class="min-w-0 flex-1">
+        <h2 class="text-base lg:text-xl font-bold text-white tracking-tight truncate">{{ title }}</h2>
+        <p class="text-xs text-slate-400 mt-0.5 hidden sm:block" *ngIf="subtitle">{{ subtitle }}</p>
+        <p class="text-xs text-slate-400 mt-0.5 hidden sm:block" *ngIf="!subtitle && jogador.nomePlayer">
           Bem-vindo de volta, <span class="text-white font-semibold">{{ jogador.nomePlayer }}</span>!
         </p>
       </div>
 
       <!-- User info -->
-      <div class="flex items-center gap-6">
-        <div class="text-right hidden sm:block">
+      <div class="flex items-center gap-3 lg:gap-6 shrink-0">
+        <!-- Barra XP (só desktop) -->
+        <div class="text-right hidden md:block">
           <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Nível {{ jogador.nivelAtual || 1 }}</p>
-          <div class="w-28 h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+          <div class="w-24 lg:w-28 h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
             <div class="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-700 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
                  [style.width.%]="xpPercentagem"></div>
           </div>
           <p class="text-[10px] text-slate-500 mt-0.5 font-medium">{{ jogador.xpPlayer || 0 }} / {{ xpParaProximoNivel }} XP</p>
         </div>
 
+        <!-- Avatar clicável -->
         <div class="relative">
-          <img [src]="'https://api.dicebear.com/9.x/avataaars/svg?seed=' + (jogador.nomePlayer || 'User')"
-               alt="Avatar" class="w-10 h-10 rounded-full border-2 border-slate-700 object-cover shadow-lg bg-slate-800">
-          <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] font-bold text-slate-900 shadow-[0_0_8px_rgba(16,185,129,0.5)]">
-            {{ jogador.nivelAtual || 1 }}
-          </div>
+          <button (click)="togglePerfil()"
+                  class="relative focus:outline-none group">
+            <img [src]="'https://api.dicebear.com/9.x/avataaars/svg?seed=' + (jogador.nomePlayer || 'User')"
+                 alt="Avatar"
+                 class="w-9 h-9 lg:w-10 lg:h-10 rounded-full border-2 border-slate-700 group-hover:border-emerald-500/60 object-cover shadow-lg bg-slate-800 transition-colors">
+            <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] font-bold text-slate-900 shadow-[0_0_8px_rgba(16,185,129,0.5)]">
+              {{ jogador.nivelAtual || 1 }}
+            </div>
+          </button>
         </div>
       </div>
     </header>
+
+    <!-- ══ POPUP DE PERFIL (fora do header para evitar stacking context do backdrop-blur) ══ -->
+    <ng-container *ngIf="perfilAberto()">
+      <!-- Overlay para fechar ao clicar fora -->
+      <div class="fixed inset-0 z-[998]" (click)="fecharPerfil()"></div>
+
+      <!-- Card do popup -->
+      <div class="fixed top-[4.25rem] lg:top-[5.25rem] right-4 z-[999] w-72 bg-slate-800 border border-slate-700/60 rounded-2xl shadow-2xl overflow-hidden">
+
+        <!-- Cabeçalho do perfil -->
+        <div class="p-4 bg-gradient-to-br from-slate-700/60 to-slate-800 border-b border-slate-700/50 flex items-center gap-3">
+          <img [src]="'https://api.dicebear.com/9.x/avataaars/svg?seed=' + (jogador.nomePlayer || 'User')"
+               alt="Avatar" class="w-12 h-12 rounded-full border-2 border-emerald-500/40 bg-slate-700 shrink-0">
+          <div class="min-w-0">
+            <p class="text-white font-bold text-sm truncate">{{ jogador.nomePlayer }}</p>
+            <p class="text-slate-400 text-xs truncate">{{ jogador.email }}</p>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="p-3 space-y-2">
+
+          <!-- Nível + Barra XP -->
+          <div class="bg-slate-900/50 rounded-xl p-3">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Nível {{ jogador.nivelAtual || 1 }}</span>
+              <span class="text-xs font-bold text-emerald-400">{{ jogador.xpPlayer || 0 }} / {{ xpParaProximoNivel }} XP</span>
+            </div>
+            <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-700 shadow-[0_0_6px_rgba(16,185,129,0.5)]"
+                   [style.width.%]="xpPercentagem"></div>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-1.5">Faltam <span class="text-slate-300 font-medium">{{ xpParaProximoNivel - (jogador.xpPlayer || 0) }} XP</span> para o próximo nível</p>
+          </div>
+
+          <!-- Moedas e Vidas -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-900/50 rounded-xl p-3 flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-yellow-500/15 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-yellow-400" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+              </div>
+              <div>
+                <p class="text-white font-bold text-sm leading-none">{{ moedas() }}</p>
+                <p class="text-slate-500 text-[10px] mt-0.5">Moedas</p>
+              </div>
+            </div>
+            <div class="bg-slate-900/50 rounded-xl p-3 flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-red-500/15 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-red-400" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              </div>
+              <div>
+                <p class="text-white font-bold text-sm leading-none">{{ jogador.vidasJogador || 0 }}</p>
+                <p class="text-slate-500 text-[10px] mt-0.5">Vidas</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sair -->
+          <button (click)="logout()"
+            class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sair da Conta
+          </button>
+        </div>
+      </div>
+    </ng-container>
 
     <!-- CONTEÚDO -->
     <div class="flex-1 overflow-y-auto z-10 scrollbar-hide">
