@@ -1,0 +1,88 @@
+<app-dashboard-layout title="Mentor de Inteligência Artificial">
+  <div class="flex flex-col h-full p-6 lg:p-8 max-w-3xl mx-auto">
+
+    <!-- Intro -->
+    <div class="mb-6 bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+        <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+      </div>
+      <div>
+        <p class="text-white font-semibold text-sm">Mentor IA — FinQuest</p>
+        <p class="text-slate-400 text-xs mt-0.5 leading-relaxed">Faz qualquer pergunta sobre finanças pessoais, investimentos ou conceitos económicos. Estou aqui para te ajudar a aprender!</p>
+      </div>
+      <span class="ml-auto shrink-0 text-[10px] font-bold text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-full px-2.5 py-1">BETA</span>
+    </div>
+
+    <!-- Chat -->
+    <div class="flex-1 overflow-y-auto space-y-4 mb-4 scrollbar-hide min-h-0" #chatScroll>
+
+      <!-- Mensagem de boas-vindas -->
+      <div class="flex items-start gap-3">
+        <div class="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        </div>
+        <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%]">
+          <p class="text-slate-200 text-sm leading-relaxed">
+            Olá, <span class="text-white font-semibold">{{ nome }}</span>! Sou o Mentor IA do FinQuest. O que queres aprender sobre finanças hoje?
+          </p>
+        </div>
+      </div>
+
+      <!-- Histórico -->
+      <ng-container *ngFor="let msg of chatHistory()">
+        <!-- Mensagem do utilizador -->
+        <div *ngIf="msg.role === 'user'" class="flex items-start gap-3 flex-row-reverse">
+          <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%]">
+            <p class="text-slate-100 text-sm leading-relaxed">{{ msg.text }}</p>
+          </div>
+        </div>
+
+        <!-- Mensagem da IA -->
+        <div *ngIf="msg.role === 'ai'" class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+          </div>
+          <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%]">
+            <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-wrap">{{ msg.text }}</p>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Typing indicator -->
+      <div *ngIf="isTyping()" class="flex items-start gap-3">
+        <div class="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        </div>
+        <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl rounded-tl-sm px-4 py-3">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style="animation-delay:0ms"></span>
+            <span class="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style="animation-delay:150ms"></span>
+            <span class="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style="animation-delay:300ms"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="flex items-center gap-3 bg-slate-800/60 border border-slate-700/50 rounded-2xl p-3">
+      <input
+        type="text"
+        [(ngModel)]="chatInput"
+        (keyup.enter)="askMentor()"
+        [disabled]="isTyping()"
+        placeholder="Faz uma pergunta sobre finanças..."
+        class="flex-1 bg-transparent text-slate-200 placeholder-slate-500 text-sm outline-none px-2">
+      <button
+        (click)="askMentor()"
+        [disabled]="!chatInput.trim() || isTyping()"
+        class="w-10 h-10 bg-purple-500 hover:bg-purple-400 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-xl flex items-center justify-center transition-all shrink-0">
+        <svg *ngIf="!isTyping()" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        <svg *ngIf="isTyping()" class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+  </div>
+</app-dashboard-layout>

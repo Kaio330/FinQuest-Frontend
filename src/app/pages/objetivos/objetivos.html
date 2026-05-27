@@ -1,0 +1,337 @@
+<app-dashboard-layout>
+  <div class="p-6 lg:p-8 space-y-8 max-w-6xl mx-auto">
+
+    <!-- ═══════════════════ CABEÇALHO ═══════════════════ -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="text-2xl lg:text-3xl font-bold text-white tracking-tight">Os meus Objetivos</h1>
+        <p class="text-slate-400 text-sm mt-1">Define metas financeiras e acompanha o teu progresso.</p>
+      </div>
+      <button
+        (click)="abrirModal()"
+        class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] text-sm w-fit">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo Objetivo
+      </button>
+    </div>
+
+    <!-- ═══════════════════ LOADING ═══════════════════ -->
+    <div *ngIf="loading()" class="flex flex-col items-center justify-center py-20 gap-4">
+      <svg class="w-10 h-10 text-emerald-400 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" stroke-opacity="0.2"/>
+        <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+      </svg>
+      <p class="text-slate-400 text-sm">A carregar objetivos...</p>
+    </div>
+
+    <ng-container *ngIf="!loading()">
+
+      <!-- ═══════════════════ STATS ═══════════════════ -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-white">{{ totalEmProgresso() }}</p>
+            <p class="text-slate-400 text-xs">Em progresso</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-white">{{ totalConcluidos() }}</p>
+            <p class="text-slate-400 text-xs">Concluídos</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-white">{{ objetivos().length }}</p>
+            <p class="text-slate-400 text-xs">Total de objetivos</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ FILTROS ═══════════════════ -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <button
+          (click)="filtro.set('todos')"
+          [class]="filtro() === 'todos'
+            ? 'px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-500 text-slate-900 transition-all'
+            : 'px-4 py-2 rounded-xl text-sm font-semibold bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:border-slate-600 transition-all'">
+          Todos
+        </button>
+        <button
+          (click)="filtro.set('em_progresso')"
+          [class]="filtro() === 'em_progresso'
+            ? 'px-4 py-2 rounded-xl text-sm font-semibold bg-blue-500 text-white transition-all'
+            : 'px-4 py-2 rounded-xl text-sm font-semibold bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:border-slate-600 transition-all'">
+          Em Progresso
+        </button>
+        <button
+          (click)="filtro.set('concluidos')"
+          [class]="filtro() === 'concluidos'
+            ? 'px-4 py-2 rounded-xl text-sm font-semibold bg-slate-500 text-white transition-all'
+            : 'px-4 py-2 rounded-xl text-sm font-semibold bg-slate-800/60 border border-slate-700/50 text-slate-400 hover:text-white hover:border-slate-600 transition-all'">
+          Concluídos
+        </button>
+      </div>
+
+      <!-- ═══════════════════ LISTA VAZIA ═══════════════════ -->
+      <div *ngIf="objetivosFiltrados().length === 0"
+           class="bg-slate-800/40 border border-slate-700/40 rounded-2xl p-14 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-slate-700/60 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <p class="text-white font-semibold mb-1">
+          {{ filtro() === 'todos' ? 'Ainda sem objetivos' : 'Nenhum objetivo nesta categoria' }}
+        </p>
+        <p class="text-slate-400 text-sm mb-5">
+          {{ filtro() === 'todos' ? 'Cria o teu primeiro objetivo financeiro e começa a poupar com propósito.' : 'Experimenta outro filtro ou cria um novo objetivo.' }}
+        </p>
+        <button *ngIf="filtro() === 'todos'"
+          (click)="abrirModal()"
+          class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold px-5 py-2.5 rounded-xl transition-all text-sm">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Criar primeiro objetivo
+        </button>
+      </div>
+
+      <!-- ═══════════════════ GRID DE OBJETIVOS ═══════════════════ -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5" *ngIf="objetivosFiltrados().length > 0">
+        <div
+          *ngFor="let obj of objetivosFiltrados()"
+          [class]="'relative bg-slate-800/60 border rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 group '
+            + (obj.concluido ? 'border-emerald-700/40 bg-emerald-950/20' : 'border-slate-700/50 hover:border-slate-600')">
+
+          <!-- Tag concluído -->
+          <div *ngIf="obj.concluido"
+               class="absolute top-4 right-4 flex items-center gap-1 bg-emerald-500/15 border border-emerald-500/30 rounded-full px-2.5 py-1">
+            <svg class="w-3 h-3 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="text-emerald-400 text-xs font-semibold">Concluído</span>
+          </div>
+
+          <!-- Título e prazo -->
+          <div class="pr-24">
+            <h3 class="text-white font-bold text-base leading-tight">{{ obj.titulo }}</h3>
+            <p *ngIf="obj.descricao" class="text-slate-400 text-xs mt-1 leading-relaxed">{{ obj.descricao }}</p>
+          </div>
+
+          <!-- Barra de progresso -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-400">Progresso</span>
+              <span [class]="obj.concluido ? 'text-emerald-400 font-bold' : 'text-white font-semibold'">
+                {{ percentagem(obj) }}%
+              </span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-700 rounded-full overflow-hidden">
+              <div
+                class="h-full rounded-full transition-all duration-700"
+                [class]="obj.concluido ? 'bg-emerald-500' : 'bg-gradient-to-r from-blue-500 to-emerald-500'"
+                [style.width.%]="percentagem(obj)">
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-400">
+              <span>
+                <span class="text-white font-semibold">{{ obj.valorAtual | number:'1.0-2' }} €</span>
+                &nbsp;de&nbsp;
+                <span class="text-white font-semibold">{{ obj.valorMeta | number:'1.0-2' }} €</span>
+              </span>
+              <span *ngIf="obj.prazo">
+                <!-- Prazo ultrapassado -->
+                <span *ngIf="!obj.concluido && prazoUltrapassado(obj.prazo)"
+                      class="text-red-400 font-medium flex items-center gap-1">
+                  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Prazo ultrapassado
+                </span>
+                <!-- Prazo próximo -->
+                <span *ngIf="!obj.concluido && prazoProximo(obj.prazo) && !prazoUltrapassado(obj.prazo)"
+                      class="text-yellow-400 font-medium flex items-center gap-1">
+                  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Prazo a {{ formatarData(obj.prazo) }}
+                </span>
+                <!-- Prazo normal -->
+                <span *ngIf="obj.concluido || (!prazoProximo(obj.prazo) && !prazoUltrapassado(obj.prazo))"
+                      class="text-slate-500">
+                  Prazo: {{ formatarData(obj.prazo) }}
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Ações -->
+          <div class="flex items-center gap-2 pt-1 border-t border-slate-700/50" *ngIf="!obj.concluido">
+            <button
+              (click)="abrirProgresso(obj)"
+              class="flex-1 flex items-center justify-center gap-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 hover:border-blue-500/50 text-blue-400 text-xs font-semibold py-2 rounded-xl transition-all">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Atualizar Progresso
+            </button>
+            <button
+              (click)="deletarObjetivo(obj.id!)"
+              class="flex items-center justify-center w-9 h-9 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 text-red-400 rounded-xl transition-all">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
+          </div>
+
+          <!-- Concluído: só botão de apagar -->
+          <div class="flex items-center justify-between pt-1 border-t border-emerald-700/30" *ngIf="obj.concluido">
+            <span class="text-xs text-slate-500">Concluído em {{ formatarData(obj.dataConclusao) }}</span>
+            <button
+              (click)="deletarObjetivo(obj.id!)"
+              class="flex items-center justify-center w-8 h-8 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 text-red-400 rounded-xl transition-all">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- ═══════════════════ MODAL CRIAR OBJETIVO ═══════════════════ -->
+  <div *ngIf="mostrarModal()"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       (click)="fecharModal()">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"></div>
+
+    <!-- Card do modal -->
+    <div class="relative w-full max-w-md bg-slate-800 border border-slate-700/60 rounded-3xl p-8 shadow-2xl z-10"
+         (click)="$event.stopPropagation()">
+
+      <!-- Fechar -->
+      <button (click)="fecharModal()"
+              class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white rounded-xl hover:bg-slate-700/60 transition-all">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <h2 class="text-xl font-bold text-white mb-1">Novo Objetivo</h2>
+      <p class="text-slate-400 text-sm mb-6">Define uma meta financeira e começa a poupar com propósito.</p>
+
+      <!-- Erro -->
+      <div *ngIf="erroModal()"
+           class="mb-5 flex items-start gap-2 bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
+        <svg class="w-4 h-4 text-red-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p class="text-red-300 text-xs">{{ erroModal() }}</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="criarObjetivo()" class="space-y-4">
+
+        <!-- Título -->
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1.5">Título *</label>
+          <input
+            type="text"
+            formControlName="titulo"
+            placeholder="Ex: Fundo de emergência"
+            class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm outline-none transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+            [class.border-red-500]="form.get('titulo')!.invalid && form.get('titulo')!.touched">
+          <p *ngIf="form.get('titulo')!.invalid && form.get('titulo')!.touched" class="mt-1 text-xs text-red-400">Mínimo 3 caracteres.</p>
+        </div>
+
+        <!-- Descrição -->
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1.5">Descrição</label>
+          <textarea
+            formControlName="descricao"
+            placeholder="Para que serve este objetivo?"
+            rows="2"
+            class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm outline-none transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 resize-none">
+          </textarea>
+        </div>
+
+        <!-- Valor Meta + Prazo -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1.5">Valor Meta (€) *</label>
+            <input
+              type="number"
+              formControlName="valorMeta"
+              placeholder="1000"
+              min="1"
+              class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm outline-none transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+              [class.border-red-500]="form.get('valorMeta')!.invalid && form.get('valorMeta')!.touched">
+            <p *ngIf="form.get('valorMeta')!.invalid && form.get('valorMeta')!.touched" class="mt-1 text-xs text-red-400">Valor inválido.</p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1.5">Prazo</label>
+            <input
+              type="date"
+              formControlName="prazo"
+              class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm outline-none transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 [color-scheme:dark]">
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="flex gap-3 pt-2">
+          <button type="button" (click)="fecharModal()"
+            class="flex-1 py-3 rounded-xl border border-slate-600 text-slate-300 hover:text-white hover:border-slate-500 text-sm font-semibold transition-all">
+            Cancelar
+          </button>
+          <button type="submit" [disabled]="criando()"
+            class="flex-1 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:bg-slate-700 disabled:text-slate-500 text-slate-900 font-bold text-sm transition-all flex items-center justify-center gap-2">
+            <svg *ngIf="!criando()" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <svg *ngIf="criando()" class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+            {{ criando() ? 'A criar...' : 'Criar Objetivo' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ MODAL ATUALIZAR PROGRESSO ═══════════════════ -->
+  <div *ngIf="objetivoEditando()"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       (click)="fecharProgresso()">
+    <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"></div>
+
+    <div class="relative w-full max-w-sm bg-slate-800 border border-slate-700/60 rounded-3xl p-8 shadow-2xl z-10"
+         (click)="$event.stopPropagation()">
+
+      <button (click)="fecharProgresso()"
+              class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white rounded-xl hover:bg-slate-700/60 transition-all">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <h2 class="text-xl font-bold text-white mb-1">Atualizar Progresso</h2>
+      <p class="text-slate-400 text-sm mb-1">{{ objetivoEditando()?.titulo }}</p>
+      <p class="text-slate-500 text-xs mb-6">
+        Meta: <span class="text-white font-semibold">{{ objetivoEditando()?.valorMeta | number:'1.0-2' }} €</span>
+      </p>
+
+      <form [formGroup]="formProgresso" (ngSubmit)="salvarProgresso()" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1.5">Valor atual poupado (€)</label>
+          <input
+            type="number"
+            formControlName="valorAtual"
+            placeholder="0"
+            min="0"
+            [max]="objetivoEditando()?.valorMeta || null"
+            class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 text-sm outline-none transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+        </div>
+        <div class="flex gap-3">
+          <button type="button" (click)="fecharProgresso()"
+            class="flex-1 py-3 rounded-xl border border-slate-600 text-slate-300 hover:text-white text-sm font-semibold transition-all">
+            Cancelar
+          </button>
+          <button type="submit" [disabled]="atualizando()"
+            class="flex-1 py-3 rounded-xl bg-blue-500 hover:bg-blue-400 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-sm transition-all flex items-center justify-center gap-2">
+            <svg *ngIf="atualizando()" class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+            {{ atualizando() ? 'A guardar...' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</app-dashboard-layout>

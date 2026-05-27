@@ -45,7 +45,24 @@ export class AuthService {
   }
 
   estaAutenticado(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) return false;
+    if (this.tokenExpirado(token)) {
+      this.logout();
+      return false;
+    }
+    return true;
+  }
+
+  private tokenExpirado(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      // exp está em segundos, Date.now() em milissegundos
+      return payload.exp * 1000 < Date.now();
+    } catch {
+      // Se não conseguir ler o token, considera-o inválido
+      return true;
+    }
   }
 
   atualizarSessao(dados: Partial<JogadorSessao>): void {

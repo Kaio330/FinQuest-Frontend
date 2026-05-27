@@ -8,12 +8,10 @@
       <div class="level-info">
         <span class="level-text">NÍVEL {{ jogador.nivelAtual || 1 }}</span>
         <div class="progress-bar-container">
-          <div class="progress-bar-fill"
-               [style.width.%]="((jogador.xpPlayer || 0) / ((jogador.nivelAtual || 1) * 100)) * 100">
-          </div>
+          <div class="progress-bar-fill" [style.width.%]="xpPercentagem"></div>
         </div>
         <span class="xp-text">
-          {{ jogador.xpPlayer || 0 }} / {{ (jogador.nivelAtual || 1) * 100 }} XP
+          {{ jogador.xpPlayer || 0 }} / {{ xpParaProximoNivel }} XP
         </span>
       </div>
       <div class="avatar">
