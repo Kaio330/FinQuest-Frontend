@@ -190,7 +190,7 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
       return {
         numNivel: n.numeroNivel,
         titulo: n.titulo,
-        xpMinimo: n.xpMinimo || 0,
+        xpMinimo: (n.numeroNivel - 1) * 100,
         licoes: licoesFormatadas
       };
     });
@@ -271,14 +271,19 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
     ]);
   }
 
-  iniciarLicao(licao: Licao) {
-    this.licaoAtiva.set(licao);
-    this.vidasAtuais.set(licao.vidasJogador);
-    this.questaoAtualIndex.set(0);
-    this.respostaSelecionada.set(null);
-    this.feedbackResposta.set(null);
-    this.licaoConcluida.set(false);
+ iniciarLicao(licao: Licao, nivelXpMinimo: number) {
+  const xpAtual = this.user().xp;
+  if (xpAtual < nivelXpMinimo) {
+    alert(`Você precisa de ${nivelXpMinimo} XP para acessar esta lição. Você tem ${xpAtual} XP.`);
+    return;
   }
+  this.licaoAtiva.set(licao);
+  this.vidasAtuais.set(licao.vidasJogador);
+  this.questaoAtualIndex.set(0);
+  this.respostaSelecionada.set(null);
+  this.feedbackResposta.set(null);
+  this.licaoConcluida.set(false);
+}
 
   sairLicao() {
     this.licaoAtiva.set(null);
@@ -320,25 +325,42 @@ export class DashboardComponent implements AfterViewChecked, OnInit {
     }
   }
 
-  finalizarEvolucao() {
-    const licao = this.licaoAtiva();
-    if (licao) {
-      // Atualiza XP e moedas localmente
+ finalizarEvolucao() {
+  const licao = this.licaoAtiva();
+  if (!licao) return;
+
+  const jogadorId = this.authService.getJogadorId();
+
+  this.http.post<any>(`${this.apiUrl}/questoes/${licao.questoes[0].idQuestao}/responder`, {
+    jogadorId: jogadorId,
+    resposta: 'A'
+  }).subscribe();
+
+  this.http.put<any>(`${this.apiUrl}/jogadores/${jogadorId}/xp`, {
+    xp: licao.recompensaXP
+  }).subscribe({
+    next: (jogadorAtualizado) => {
+      this.user.update(u => ({
+        ...u,
+        xp: jogadorAtualizado.xpPlayer,
+        level: jogadorAtualizado.nivelAtual,
+        xpNextLevel: jogadorAtualizado.nivelAtual * 100,
+        coins: u.coins + licao.recompensaCredito
+      }));
+      this.authService.atualizarSessao(jogadorAtualizado);
+    },
+    error: () => {
+      // fallback local
       this.user.update(u => ({
         ...u,
         xp: u.xp + licao.recompensaXP,
         coins: u.coins + licao.recompensaCredito
       }));
-      // Sincroniza XP na sessão
-      const jogadorAtual = this.authService.getJogadorAtual();
-      if (jogadorAtual) {
-        this.authService.atualizarSessao({
-          xpPlayer: (jogadorAtual.xpPlayer || 0) + licao.recompensaXP
-        });
-      }
     }
-    this.sairLicao();
-  }
+  });
+
+  this.sairLicao();
+}
 
   // Dados do Usuário (inicia com dados da sessão armazenada e depois atualiza do backend)
   user = signal<User>(this.buildUserFromSessao());

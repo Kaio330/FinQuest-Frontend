@@ -270,14 +270,14 @@
                         {{ nivel.titulo }}
                       </h3>
                       <span class="text-sm font-medium text-slate-400 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-700">
-                        Requer: {{ nivel.xpMinimo }} XP
+                           {{ nivel.xpMinimo }} XP
                       </span>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
                       @for (licao of nivel.licoes; track licao.idLicao) {
                         <div class="bg-slate-900/50 border border-slate-700 rounded-2xl p-6 hover:border-emerald-500/50 hover:bg-slate-800 transition-all cursor-pointer group flex flex-col"
-                             (click)="iniciarLicao(licao)">
+                             (click)="iniciarLicao(licao, nivel.xpMinimo)">
                           <div class="flex justify-between items-start mb-4">
                             <div class="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-emerald-400 shadow-inner group-hover:scale-110 transition-transform">
                               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>

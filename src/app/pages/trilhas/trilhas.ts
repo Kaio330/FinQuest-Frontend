@@ -6,8 +6,9 @@ import { LicaoService } from '../../services/licao.service';
 import { Nivel, Licao } from '../../models/nivel.model';
 import { DashboardLayout } from '../../components/dashboard-layout/dashboard-layout';
 import { RouterModule } from '@angular/router';
-
 import { Header } from '../../components/header/header';
+
+
 
 @Component({
   selector: 'app-trilhas',
@@ -24,24 +25,23 @@ export class Trilhas implements OnInit {
   loading = true;
   error = '';
 
-  ngOnInit() {
-    // Fetch both Niveis and Licoes from the backend in parallel
-    forkJoin({
+ngOnInit() {
+  console.log('ngOnInit chamado');
+  forkJoin({
+
       niveis: this.trilhaService.getTrilhas(),
       licoes: this.licaoService.getLicoes()
     }).subscribe({
       next: (data) => {
-        // Map the flat licoes array to their corresponding nivel
-        this.niveis = data.niveis.map(nivel => {
-          return {
-            ...nivel,
-            licoes: data.licoes.filter(licao => licao.nivelId === nivel.id)
-          };
-        });
-
-        // Sort niveis by number just to be safe
+  this.niveis = data.niveis.map(nivel => {
+    console.log('nivel:', nivel.numeroNivel, 'xpMinimo:', (nivel.numeroNivel - 1) * 100);
+    return {
+      ...nivel,
+      xpMinimo: (nivel.numeroNivel - 1) * 100,
+      licoes: data.licoes.filter(licao => licao.nivelId === nivel.id)
+    };
+  });
         this.niveis.sort((a, b) => a.numeroNivel - b.numeroNivel);
-
         this.loading = false;
       },
       error: (err) => {
